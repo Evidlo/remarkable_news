@@ -19,7 +19,17 @@ Alternatively you can use the prebuilt release if you don't have Go
     
 ## Contributing
 
-I'm looking for help adding more comics/news sources.  Currently remarkable_news supports `.jpg`, `.png`, `.tiff`, and `.bmp` sources.  New source URLs can be added to the [Makefile](Makefile).
+I'm looking for help adding more comics/news sources.  Currently remarkable_news supports `.jpg`, `.png`, `.tiff`, and `.bmp` sources.  New source URLs can be added to the [Makefile](Makefile) in the *Sources* section.
+
+URLs can be date dependent.  For example, this URL template
+
+    http://example.com/%%Y/%%m/%%d/news.jpg
+    
+would be converted to this URL by remarkable_news.
+
+    http://example.com/2020/04/18/news.jpg
+    
+The full list of date formatting options are listed [here](https://github.com/lestrrat-go/strftime#supported-conversion-specifications).  Two percent signs should be used instead of just one, as in the example above.
 
 ## Debugging
 
