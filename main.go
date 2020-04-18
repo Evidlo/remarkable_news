@@ -1,31 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
 	"flag"
 	"time"
-	"io/ioutil"
 	"image"
-	"github.com/lestrrat-go/strftime"
-	"github.com/pkg/errors"
 	"github.com/disintegration/imaging"
 )
-
-var LOG_LEVEL = "error"
-
-func check(err error, msg string) {
-	if err != nil {
-		panic(errors.Wrap(err, msg));
-	}
-}
-
-func debug(msg ...string) {
-	if LOG_LEVEL == "debug" {
-		fmt.Println(msg)
-	}
-}
-
 
 func main() {
 	// ----- flag parsing -----
@@ -35,6 +15,8 @@ func main() {
 	format := flag.Bool("strftime", false, "enable strftime formatting in URL")
 	verbose := flag.Bool("verbose", false, "enable debug output")
 	timezone := flag.String("timezone", "", "override timezone (tzinfo format)")
+	xpath := flag.String("xpath", "", "xpath to <img> tag in url")
+	test := flag.Bool("test", false, "disable wait-online and cooldown")
 	top := flag.Int("top", 0, "crop from top")
 	left := flag.Int("left", 0, "crop from left")
 	right := flag.Int("right", 0, "crop from right")
@@ -46,83 +28,47 @@ func main() {
 		LOG_LEVEL = "debug"
 	}
 
-	time_last_success := time.Time{}
-
-
-	online := make(chan int)
-	go wait_online(online)
-
-	for {
-		// ----- network wait online -----
-
-		// wait for network online message from wpa supplicant
-		<- online
-		debug("Network online")
-
-		// FIXME - need to wait a few seconds for DNS?
-		time.Sleep(5 * time.Second)
-
-		// allow strftime formatting for date-dependent urls
-		if *format {
-			if *timezone != "" {
-				tz, err := time.LoadLocation(*timezone)
-				check(err, "")
-				*url, err = strftime.Format(*url, time.Now().In(tz))
-				check(err, "")
-			} else {
-				var err error
-				*url, err = strftime.Format(*url, time.Now())
-				check(err, "")
-			}
-			debug("strftime formatted URL:", *url)
+	// download/rescale image, then quit
+	if *test {
+		img, err := download(*url, *format, *timezone, *xpath)
+		if err != nil {
+			panic(err)
 		}
+		img = adjust(img, *top, *left, *right, *bottom)
+		imaging.Save(img, *output)
+		debug("Image saved to ", *output)
+	} else {
+		time_last_success := time.Time{}
 
-		// make sure we don't hammer server every time wifi is turned on
-		if time.Now().Sub(time_last_success).Seconds() > float64(*cooldown) {
-			debug("Beginning download")
+		online := make(chan int)
+		go wait_online(online)
 
-			// ----- image download -----
+		// loop forever and wait for network online events
+		for {
+			// wait for network online message from wpa supplicant
+			<- online
+			debug("Network online")
 
-			// if http failure, wait for next reconnect
-			response, err := http.Get(*url)
-			if err != nil {
-				fmt.Println(err)
+			// FIXME - need to wait a few seconds for DNS?
+			time.Sleep(5 * time.Second)
+
+			var img image.Image
+			// make sure we don't hammer server every time wifi is turned on
+			if time.Now().Sub(time_last_success).Seconds() > float64(*cooldown) {
+				var err error
+				img, err = download(*url, *format, *timezone, *xpath)
+				// FIXME
+				if err == nil {
+					time_last_success = time.Now()
+				}
+			} else {
+				debug("Hit cooldown limit")
 				continue
-
 			}
-			defer response.Body.Close()
-			// if http error code, wait for next reconnect
-			if response.StatusCode != 200 {
-				body, _ := ioutil.ReadAll(response.Body)
-				fmt.Println(body)
-				continue
-			}
-			time_last_success = time.Now()
-			img, err := imaging.Decode(response.Body)
-			check(err, "")
 
-			// ----- image resizing/cropping -----
-
-			rect := img.Bounds()
-			img = imaging.Crop(
-				img,
-				image.Rect(
-					rect.Min.X + *left,
-					rect.Min.Y + *top,
-					rect.Max.X - *right,
-					rect.Max.Y - *bottom,
-				),
-			)
-			// fit image
-			img = imaging.Fill(img, 1404, 1872, imaging.Top, imaging.NearestNeighbor)
-			// img = imaging.Fill(img, 1404, 1872, imaging.Top, imaging.Linear)
-			// img = imaging.Fill(img, 1404, 1872, imaging.Top, imaging.Box)
-			// img = imaging.Fill(img, 1404, 1872, imaging.Top, imaging.Lanczos)
-
+			img = adjust(img, *top, *left, *right, *bottom)
 			imaging.Save(img, *output)
 			debug("Image saved to ", *output)
-		} else {
-			debug("Hit cooldown limit")
 		}
 	}
 }
