@@ -1,0 +1,15 @@
+[Unit]
+Description=News and comic suspend screen for reMarkable tablet
+
+[Service]
+ExecStart=/home/root/renews \
+    -output /usr/share/remarkable/suspended.png \
+    -url URL \
+    -strftime \
+    -verbose \
+    -timezone TZ \
+    -cooldown COOLDOWN
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
