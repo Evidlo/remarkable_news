@@ -2,7 +2,7 @@
 Description=News and comic suspend screen for reMarkable tablet
 
 [Service]
-ExecStart=/home/root/renews \
+ExecStart=/home/root/renews.arm \
     -output /usr/share/remarkable/suspended.png \
     -url URL \
     -strftime \
