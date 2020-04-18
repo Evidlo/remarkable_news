@@ -14,11 +14,16 @@ renews.x86:
 # get latest prebuilt releases
 .PHONY: download_prebuilt
 download_prebuilt:
-	wget foo
-	unzip foo
+	wget https://github.com/Evidlo/remarkable_news/releases/download/1/release.zip
+	unzip release.zip
+
+# build release
+.PHONY: release
+release: renews.arm renews.x86
+	zip release.zip renews.arm renews.x86
 
 clean:
-	rm -f renews.x86 renews.arm
+	rm -f renews.x86 renews.arm release.zip
 
 define install
 	ssh-add
