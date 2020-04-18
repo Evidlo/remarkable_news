@@ -29,10 +29,11 @@ define install
 	ssh-add
 	ssh root@$(host) systemctl stop renews
 	scp renews.arm root@$(host):
-	sed -e "s|URL|$(1)|" \
-		-e "s|TZ|$(timezone)|" \
+	# substitute timezone/cooldown arguments
+	sed -e "s|TZ|$(timezone)|" \
 		-e "s|COOLDOWN|$(cooldown)|" \
-		template.service > renews.service
+		$(1) > renews.service
+	# copy service to remarkable and enable
 	scp renews.service root@$(host):/etc/systemd/system/renews.service
 	ssh root@$(host) <<- ENDSSH
 		systemctl daemon-reload
@@ -45,4 +46,8 @@ endef
 
 .PHONY: install_nyt
 install_nyt: renews.arm
-	$(call install,'https://cdn.newseum.org/dfp/jpg%%d/lg/NY_NYT.jpg')
+	$(call install,services/nyt.service)
+
+.PHONY: install_xkcd
+install_xkcd: renews.arm
+	$(call install,services/xkcd.service)

@@ -2,7 +2,7 @@
 
 Automatically download daily newspaper/comic as your suspend screen.  No cloud needed.
 
-![demo](pic2.jpg)
+![demo](pic.png)
 
 ## Install
 
@@ -10,12 +10,17 @@ Assuming you have Go installed
 
     make install_nyt
     
-This will install and start the newspaper fetch service on the reMarkable.  Every time you connect to WiFi, it will try to grab the latest front page from New York Times.
+This will install and start the newspaper fetch service on the reMarkable.  Every time you connect to WiFi, it will try to grab the latest front page from The New York Times.
     
 Alternatively you can use the prebuilt release if you don't have Go
 
     make download_prebuilt
     make install_nyt
+    
+## Supported News/Comics Sources
+
+- New York Times - `make install_nyt`
+- XKCD - `make install_xkcd`
     
 ## Contributing
 

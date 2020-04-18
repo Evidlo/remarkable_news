@@ -1,14 +1,14 @@
 [Unit]
-Description=News and comic suspend screen for reMarkable tablet
+Description=XKCD
 
 [Service]
 ExecStart=/home/root/renews.arm \
     -output /usr/share/remarkable/suspended.png \
-    -url URL \
-    -strftime \
     -verbose \
     -timezone TZ \
-    -cooldown COOLDOWN
+    -cooldown COOLDOWN \
+    -url https://xkcd.com \
+    -xpath '//div[@id="comic"]/img'
 Restart=always
 
 [Install]
