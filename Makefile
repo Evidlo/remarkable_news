@@ -51,3 +51,7 @@ install_nyt: renews.arm
 .PHONY: install_xkcd
 install_xkcd: renews.arm
 	$(call install,services/xkcd.service)
+
+.PHONY: install_wp
+install_wp: renews.arm
+	$(call install,services/wp.service)
