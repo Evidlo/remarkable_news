@@ -5,10 +5,11 @@ Description=XKCD
 ExecStart=/home/root/renews.arm \
     -output /usr/share/remarkable/suspended.png \
     -verbose \
-    -timezone TZ \
     -cooldown COOLDOWN \
     -url https://xkcd.com \
-    -xpath '//div[@id="comic"]/img'
+    -xpath '//div[@id="comic"]/img' \
+    -mode center \
+    -scale 1.75
 Restart=always
 
 [Install]

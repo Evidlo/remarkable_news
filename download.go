@@ -6,10 +6,14 @@ import (
 	// "fmt"
 	"net/url"
 	"image"
+	"image/color"
 	"errors"
 	"github.com/lestrrat-go/strftime"
 	"github.com/disintegration/imaging"
 	"github.com/antchfx/htmlquery"
+
+	// FIXME - resizing already built into imaging, but this is much faster
+	"github.com/nfnt/resize"
 )
 
 var Err404 = errors.New("Err404")
@@ -124,19 +128,48 @@ func download(url string, format bool, timezone, xpath string) (image.Image, err
 
 }
 
-func adjust(img image.Image, top, left, right, bottom int) image.Image {
-	rect := img.Bounds()
-	img = imaging.Crop(
-		img,
-		image.Rect(
-			rect.Min.X + left,
-			rect.Min.Y + top,
-			rect.Max.X - right,
-			rect.Max.Y - bottom,
-		),
-	)
-	// fit image
-	img = imaging.Fill(img, 1404, 1872, imaging.Top, imaging.NearestNeighbor)
+// scale, inset image to reMarkable display size
+func adjust(img image.Image, mode string, scale float64) image.Image {
+
+	debug("Adjusting image")
+
+	re_width := 1404
+	re_height := 1872
+
+	if mode == "fill" {
+		// imaging resize is slow for some reason
+		// img = imaging.Resize(img, re_width, 0, imaging.Linear)
+		img = resize.Resize(uint(re_width), 0, img, resize.Bilinear)
+		img = imaging.Crop(img, image.Rect(0, 0, 1404, 1872))
+
+	} else if mode == "center" {
+		if scale != 1 {
+			img_width := float64(img.Bounds().Max.X)
+			img = resize.Resize(uint(scale * img_width), 0, img, resize.Bilinear)
+		}
+		background := imaging.New(
+			re_width,
+			re_height,
+			color.RGBA{255, 255, 255, 255},
+		)
+		img = imaging.PasteCenter(background, img)
+	} else {
+		debug("Invalid mode")
+	}
+
+
+	// rect := img.Bounds()
+	// img = imaging.Crop(
+	// 	img,
+	// 	image.Rect(
+	// 		rect.Min.X + left,
+	// 		rect.Min.Y + top,
+	// 		rect.Max.X - right,
+	// 		rect.Max.Y - bottom,
+	// 	),
+	// )
+	// fill image
+	// img = imaging.Fill(img, 1404, 1872, imaging.Top, imaging.NearestNeighbor)
 	// img = imaging.Fill(img, 1404, 1872, imaging.Top, imaging.Linear)
 	// img = imaging.Fill(img, 1404, 1872, imaging.Top, imaging.Box)
 	// img = imaging.Fill(img, 1404, 1872, imaging.Top, imaging.Lanczos)

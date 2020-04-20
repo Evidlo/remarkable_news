@@ -19,8 +19,9 @@ Alternatively you can use the prebuilt release if you don't have Go
     
 ## Supported News/Comics Sources
 
-- New York Times - `make install_nyt`
 - XKCD - `make install_xkcd`
+- Washington Post - `make install_wp`
+- New York Times - `make install_nyt`
     
 ## Contributing
 
@@ -40,4 +41,4 @@ The full list of date formatting options are listed [here](https://github.com/le
 
     journalctl --unit renews -f
     
-Then disconnect and reconnect WiFi to trigger a download.
+Then disconnect and reconnect WiFi to trigger a download.  remarkable_news will only download at a maximum of once per hour to avoid burdening the server.

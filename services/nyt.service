@@ -8,7 +8,8 @@ ExecStart=/home/root/renews.arm \
     -timezone TZ \
     -cooldown COOLDOWN \
     -url https://cdn.newseum.org/dfp/jpg%%d/lg/NY_NYT.jpg \
-    -strftime
+    -strftime \
+    -mode fill
 Restart=always
 
 [Install]
