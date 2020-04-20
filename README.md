@@ -20,8 +20,8 @@ Alternatively you can use the prebuilt release if you don't have Go
 ## Supported News/Comics Sources
 
 - XKCD - `make install_xkcd`
-- Washington Post - `make install_wp`
-- New York Times - `make install_nyt`
+- Washington Post (only updates weekdays) - `make install_wp`
+- New York Times (slightly low resolution) - `make install_nyt`
     
 ## Contributing
 
