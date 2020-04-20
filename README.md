@@ -6,7 +6,7 @@ reMarkable service to automatically download daily newspaper/comic as your suspe
 
 ## Install (Linux/OSX)
 
-Assuming you have Go installed
+Assuming you have Go installed and with the reMarkable connected via USB
 
     git clone http://github.com/evidlo/remarkable_news && cd remarkable_news
     make install_nyt
@@ -28,7 +28,7 @@ Install [WSL](https://docs.microsoft.com/en-us/learn/modules/get-started-with-wi
 - XKCD - `make install_xkcd`
 - Washington Post (only updates weekdays) - `make install_wp`
 - New York Times (slightly low resolution) - `make install_nyt`
-- Wikipedia Picture of the Day - `make install_wikipotd`
+<!-- - Wikipedia Picture of the Day - `make install_wikipotd` -->
     
 ## Contributing
 
@@ -54,6 +54,8 @@ Also, there are some additional features I would like to get added
 Run `renews.x86` with the `-test` option.  This disables download cooldown and waiting for WiFi connect.
 
 ## Debugging
+
+On the reMarkable
 
     journalctl --unit renews -f
     
