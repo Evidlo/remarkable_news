@@ -1,6 +1,6 @@
 # remarkable_news
 
-Automatically download daily newspaper/comic as your suspend screen.  No cloud needed.
+reMarkable service to automatically download daily newspaper/comic as your suspend screen.  No cloud needed.
 
 ![demo](pic.png)
 
@@ -31,20 +31,17 @@ Install [WSL](https://docs.microsoft.com/en-us/learn/modules/get-started-with-wi
     
 ## Contributing
 
-I'm looking for help adding more comics/news sources.  Currently remarkable_news supports `.jpg`, `.png`, `.tiff`, and `.bmp` sources.  New source URLs can be added to the [Makefile](Makefile) in the *Sources* section.
+I'm looking for help adding more comics/news sources.  Currently remarkable_news supports `.jpg`, `.png`, `.tiff`, and `.bmp` sources.  New source configurations can be added in the `services/` folder and a new target should be added to the [Makefile](Makefile) in the *Sources* section.
 
-URLs can be date dependent.  For example, this URL template
-
-    http://example.com/%%Y/%%m/%%d/news.jpg
-    
-would be converted to this URL by remarkable_news.
-
-    http://example.com/2020/04/18/news.jpg
+URLs can be date dependent.  See [this file](/services/nyt.service) for an example.
     
 The full list of date formatting options are listed [here](https://github.com/lestrrat-go/strftime#supported-conversion-specifications).  Two percent signs should be used instead of just one, as in the example above.
+
+remarkable_news also supports parsing images out of webpages using [XPath expression](https://www.webperformance.com/load-testing-tools/blog/articles/real-browser-manual/building-a-testcase/how-locate-element-the-page/xpath-locator-examples/).  See [this file](/services/xkcd.service) for an example.
 
 ## Debugging
 
     journalctl --unit renews -f
     
 Then disconnect and reconnect WiFi to trigger a download.  remarkable_news will only download at a maximum of once per hour to avoid burdening the server.
+
