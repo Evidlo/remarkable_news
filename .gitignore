@@ -2,3 +2,6 @@ renews.service
 renews.arm
 renews.x86
 release.zip
+
+# Developing on Mac
+.DS_Store
