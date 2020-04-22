@@ -29,11 +29,11 @@ define install
 	ssh-add
 	ssh root@$(host) systemctl stop renews
 	scp renews.arm root@$(host):
-# substitute timezone/cooldown arguments
+	# substitute timezone/cooldown arguments
 	sed -e "s|TZ|$(timezone)|" \
 		-e "s|COOLDOWN|$(cooldown)|" \
 		$(1) > renews.service
-# copy service to remarkable and enable
+	# copy service to remarkable and enable
 	scp renews.service root@$(host):/etc/systemd/system/renews.service
 	ssh root@$(host) <<- ENDSSH
 		systemctl daemon-reload
@@ -57,7 +57,7 @@ install_wp: renews.arm
 	$(call install,services/wp.service)
 
 .PHONY: install_picsum
-install_wp: renews.arm
+install_picsum: renews.arm
 	$(call install,services/picsum.service)
 
 # .PHONY: install_wikipotd
