@@ -28,6 +28,7 @@ Install [WSL](https://docs.microsoft.com/en-us/learn/modules/get-started-with-wi
 - XKCD - `make install_xkcd`
 - Washington Post (only updates weekdays) - `make install_wp`
 - New York Times (slightly low resolution) - `make install_nyt`
+- Picsum (random images) - `make picsum`
 <!-- - Wikipedia Picture of the Day - `make install_wikipotd` -->
     
 ## Contributing
