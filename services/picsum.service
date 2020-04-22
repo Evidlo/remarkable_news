@@ -1,0 +1,14 @@
+[Unit]
+Description=Picsum
+
+[Service]
+ExecStart=/home/root/renews.arm \
+    -output /usr/share/remarkable/suspended.png \
+    -verbose \
+    -cooldown 600 \
+    -url https://picsum.photos/800/1200.jpg?grayscale \
+    -mode center
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

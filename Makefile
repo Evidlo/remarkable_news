@@ -56,6 +56,10 @@ install_xkcd: renews.arm
 install_wp: renews.arm
 	$(call install,services/wp.service)
 
+.PHONY: install_picsum
+install_picsum: renews.arm
+	$(call install,services/picsum.service)
+
 # .PHONY: install_wikipotd
 # install_wikipotd: renews.arm
 # 	$(call install,services/wikipotd.service)
