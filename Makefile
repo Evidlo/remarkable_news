@@ -1,4 +1,6 @@
 .ONESHELL:
+.SILENT:
+
 host=10.11.99.1
 timezone=America/Chicago
 cooldown=3600
@@ -59,6 +61,10 @@ install_wp: renews.arm
 .PHONY: install_picsum
 install_picsum: renews.arm
 	$(call install,services/picsum.service)
+
+.PHONY: install_cah
+install_cah: renews.arm
+	$(call install,services/cah.service)
 
 # .PHONY: install_wikipotd
 # install_wikipotd: renews.arm
