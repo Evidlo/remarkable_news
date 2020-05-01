@@ -4,20 +4,22 @@ reMarkable service to automatically download daily newspaper/comic as your suspe
 
 ![demo](pic.png)
 
-## Install (Linux/OSX)
-
-Assuming you have Go installed and with the reMarkable connected via USB
-
-    git clone http://github.com/evidlo/remarkable_news && cd remarkable_news
-    make install_nyt
-    
-This will install and start the newspaper fetch service on the reMarkable.  Every time you connect to WiFi, it will try to grab the latest front page from The New York Times.
-    
-Alternatively you can use the prebuilt release if you don't want to install Go
+## Quickstart (Linux/OSX)
 
     git clone http://github.com/evidlo/remarkable_news && cd remarkable_news
     make download_prebuilt
     make install_nyt
+    
+This will install and start the update service on the reMarkable.  Every time you connect to WiFi, it will try to grab the latest front page from The New York Times.
+
+Alternatively, you can build the binary yourself before installation if you omit `make download_prebuilt`.
+
+    make install_nyt
+    
+By default, downloads are rate limited to once per hour (3600 s).  This can be overriden
+
+    # set rate limit to once per 10 min
+    make install_nyt cooldown=600
     
 ## Install (Windows)
 
@@ -40,3 +42,7 @@ On the reMarkable
     journalctl --unit renews -f
     
 Then disconnect and reconnect WiFi to trigger a download.  remarkable_news will only download at a maximum of once per hour to avoid burdening the server.
+
+## Contributing
+
+See [contributing.md](contributing.md)
