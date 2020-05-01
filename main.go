@@ -13,9 +13,10 @@ func main() {
 
 	url := flag.String("url", "", "input URL")
 	output := flag.String("output", "", "output image path")
+	source := flag.String("source", "", "use builtin source and scaling options")
 	format := flag.Bool("strftime", false, "enable strftime formatting in URL")
 	verbose := flag.Bool("verbose", false, "enable debug output")
-	timezone := flag.String("timezone", "", "override timezone (tzinfo format)")
+	timezone := flag.String("timezone", "America/Chicago", "override timezone (tzinfo format)")
 	xpath := flag.String("xpath", "", "xpath to <img> tag in url")
 	test := flag.Bool("test", false, "disable wait-online and cooldown")
 	mode := flag.String("mode", "fill", "image scaling mode (fill, center)")
@@ -31,9 +32,18 @@ func main() {
 		LOG_LEVEL = "debug"
 	}
 
+	var img image.Image
+	var err error
+
 	// download/rescale image, then quit
 	if *test {
-		img, err := download(*url, *format, *timezone, *xpath)
+		// use a built-in image source
+		if *source != "" {
+			img, err = sources[*source](*timezone)
+		} else {
+			img, err = custom(*url, *format, *timezone, *xpath)
+		}
+
 		if err != nil {
 			panic(err)
 		}
@@ -56,11 +66,15 @@ func main() {
 			// FIXME - need to wait a few seconds for DNS?
 			time.Sleep(5 * time.Second)
 
-			var img image.Image
 			// make sure we don't hammer server every time wifi is turned on
 			if time.Now().Sub(time_last_success).Seconds() > float64(*cooldown) {
-				var err error
-				img, err = download(*url, *format, *timezone, *xpath)
+
+				if *source != "" {
+					img, err = sources[*source](*timezone)
+				} else {
+					img, err = custom(*url, *format, *timezone, *xpath)
+				}
+
 				if err == nil {
 					time_last_success = time.Now()
 				} else {
