@@ -6,8 +6,11 @@ reMarkable service to automatically download daily newspaper/comic as your suspe
 
 ## Quickstart (Linux/OSX)
 
+Connect remarkable to host machine by usb cable or modify host line in `Makefile` from `10.11.99.1` to the local IP address
+
     git clone http://github.com/evidlo/remarkable_news && cd remarkable_news
     make download_prebuilt
+    unzip release.zip
     make install_nyt
     
 This will install and start the update service on the reMarkable.  Every time you connect to WiFi, it will try to grab the latest front page from The New York Times.
