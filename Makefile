@@ -17,6 +17,7 @@ renews.x86:
 .PHONY: download_prebuilt
 download_prebuilt:
 	wget http://github.com/evidlo/remarkable_news/releases/latest/download/release.zip
+	unzip release.zip
 
 # build release
 .PHONY: release
