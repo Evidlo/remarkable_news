@@ -23,7 +23,7 @@ By default, downloads are rate limited to once per hour (3600 s).  This can be o
     
 ## Install (Windows)
 
-Install [WSL](https://docs.microsoft.com/en-us/learn/modules/get-started-with-windows-subsystem-for-linux/2-enable-and-install), then follow the Linux/OSX instructions.
+Install [WSL](https://docs.microsoft.com/en-us/learn/modules/get-started-with-windows-subsystem-for-linux/2-enable-and-install), then follow the Linux/OSX instructions.  This has not been tested.
     
 ## Supported News/Comics Sources
 
