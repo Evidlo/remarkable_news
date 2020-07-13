@@ -7,7 +7,7 @@ cooldown=3600
 
 renews.arm:
 	go get ./...
-	env GOOS=linux GOARCH=arm GOARM=5 go build -o renews.arm
+	env GOOS=linux GOARCH=arm GOARM=7 go build -o renews.arm
 
 renews.x86:
 	go get ./...
