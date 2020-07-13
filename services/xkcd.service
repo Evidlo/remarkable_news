@@ -7,7 +7,7 @@ ExecStart=/home/root/renews.arm \
     -verbose \
     -cooldown COOLDOWN \
     -url https://xkcd.com \
-    -xpath '//div[@id="comic"]/img' \
+    -xpath '//div[@id="comic"]/img/@src' \
     -mode center \
     -scale 1.75
 Restart=always
