@@ -1,0 +1,16 @@
+[Unit]
+Description=New York Times
+
+[Service]
+ExecStart=/home/root/renews.arm \
+    -output /usr/share/remarkable/suspended.png \
+    -verbose \
+    -timezone TZ \
+    -cooldown COOLDOWN \
+    -url https://nyt-today.acrogenesis.com/nyt \
+    -strftime \
+    -mode center
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
