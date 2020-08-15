@@ -50,6 +50,10 @@ endef
 install_nyt: renews.arm
 	$(call install,services/nyt.service)
 
+.PHONY: install_nyt_hq
+install_nyt_hq: renews.arm
+	$(call install,services/nyt-hq.service)
+
 .PHONY: install_xkcd
 install_xkcd: renews.arm
 	$(call install,services/xkcd.service)
