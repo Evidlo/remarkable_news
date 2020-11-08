@@ -45,6 +45,22 @@ define install
 	ENDSSH
 endef
 
+define install_w_keywords
+	ssh-add
+	ssh root@$(host) systemctl stop renews
+	scp renews.arm root@$(host):
+	# substitute timezone/cooldown arguments
+	sed -e "s|KEYWORDS|$(KEYWORDS)|" \
+		$(1) > renews.service
+	# copy service to remarkable and enable
+	scp renews.service root@$(host):/etc/systemd/system/renews.service
+	ssh root@$(host) <<- ENDSSH
+		systemctl daemon-reload
+		systemctl enable renews
+		systemctl restart renews
+	ENDSSH
+endef
+
 # ----- Sources -----
 
 .PHONY: install_nyt
@@ -66,6 +82,10 @@ install_wp: renews.arm
 .PHONY: install_picsum
 install_picsum: renews.arm
 	$(call install,services/picsum.service)
+
+.PHONY: install_loremflickr
+install_loremflickr: renews.arm
+	$(call install_w_keywords,services/loremflickr.service)
 
 .PHONY: install_cah
 install_cah: renews.arm

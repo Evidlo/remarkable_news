@@ -1,0 +1,14 @@
+[Unit]
+Description=LoremFlickr
+
+[Service]
+ExecStart=/home/root/renews.arm \
+    -output /usr/share/remarkable/suspended.png \
+    -verbose \
+    -cooldown 600 \
+    -url https://loremflickr.com/g/800/1200/KEYWORDS \
+    -mode center
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
