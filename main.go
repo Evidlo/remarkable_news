@@ -52,7 +52,8 @@ func main() {
 		imaging.Save(img, *output)
 		debug("Image saved to ", *output)
 	} else {
-		time_last_success := time.Time{}
+		// initialize with zero date
+		time_last_success := time.Time{};
 
 		online := make(chan int)
 		go wait_online(online)
