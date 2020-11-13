@@ -29,7 +29,8 @@ clean:
 
 define install
 	ssh-add
-	ssh root@$(host) systemctl stop renews
+	# stop running service, ignore failure to stop
+	ssh root@$(host) systemctl stop renews || true
 	scp renews.arm root@$(host):
 	# substitute timezone/cooldown arguments
 	sed -e "s|TZ|$(timezone)|" \
