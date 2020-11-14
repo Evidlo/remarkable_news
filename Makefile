@@ -32,25 +32,10 @@ define install
 	# stop running service, ignore failure to stop
 	ssh root@$(host) systemctl stop renews || true
 	scp renews.arm root@$(host):
-	# substitute timezone/cooldown arguments
+	# substitute timezone/cooldown/KEYWORDS arguments
 	sed -e "s|TZ|$(timezone)|" \
 		-e "s|COOLDOWN|$(cooldown)|" \
-		$(1) > renews.service
-	# copy service to remarkable and enable
-	scp renews.service root@$(host):/etc/systemd/system/renews.service
-	ssh root@$(host) <<- ENDSSH
-		systemctl daemon-reload
-		systemctl enable renews
-		systemctl restart renews
-	ENDSSH
-endef
-
-define install_w_keywords
-	ssh-add
-	ssh root@$(host) systemctl stop renews
-	scp renews.arm root@$(host):
-	# substitute timezone/cooldown arguments
-	sed -e "s|KEYWORDS|$(KEYWORDS)|" \
+		-e "s|KEYWORDS|$(KEYWORDS)|" \
 		$(1) > renews.service
 	# copy service to remarkable and enable
 	scp renews.service root@$(host):/etc/systemd/system/renews.service
@@ -85,7 +70,7 @@ install_picsum: renews.arm
 
 .PHONY: install_loremflickr
 install_loremflickr: renews.arm
-	$(call install_w_keywords,services/loremflickr.service)
+	$(call install,services/loremflickr.service)
 
 .PHONY: install_cah
 install_cah: renews.arm
