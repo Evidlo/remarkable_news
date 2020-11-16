@@ -32,6 +32,7 @@ Install [WSL](https://docs.microsoft.com/en-us/learn/modules/get-started-with-wi
 - New York Times (slightly low resolution) - `make install_nyt`
 - New York Times (high quality provided by [acrogenesis/nyt-today](https://github.com/acrogenesis/nyt-today)) - `make install_nyt_hq`
 - Picsum (random images) - `make install_picsum`
+- LoremFlickr (random images) - `make install_loremflickr KEYWORDS=memphis` (example will give random pictures matching the keyword "memphis", insert your own keywords in a comma separated list e.g. `KEYWORDS=city,building`)
 - Calvin and Hobbes - `make install_cah`
 <!-- - Wikipedia Picture of the Day - `make install_wikipotd` -->
 

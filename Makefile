@@ -32,9 +32,10 @@ define install
 	# stop running service, ignore failure to stop
 	ssh root@$(host) systemctl stop renews || true
 	scp renews.arm root@$(host):
-	# substitute timezone/cooldown arguments
+	# substitute timezone/cooldown/KEYWORDS arguments
 	sed -e "s|TZ|$(timezone)|" \
 		-e "s|COOLDOWN|$(cooldown)|" \
+		-e "s|KEYWORDS|$(KEYWORDS)|" \
 		$(1) > renews.service
 	# copy service to remarkable and enable
 	scp renews.service root@$(host):/etc/systemd/system/renews.service
@@ -66,6 +67,10 @@ install_wp: renews.arm
 .PHONY: install_picsum
 install_picsum: renews.arm
 	$(call install,services/picsum.service)
+
+.PHONY: install_loremflickr
+install_loremflickr: renews.arm
+	$(call install,services/loremflickr.service)
 
 .PHONY: install_cah
 install_cah: renews.arm
