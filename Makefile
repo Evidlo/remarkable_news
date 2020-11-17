@@ -1,7 +1,7 @@
 .ONESHELL:
 .SILENT:
 
-host=10.11.99.1
+host=remarkable
 timezone=America/Chicago
 cooldown=3600
 
@@ -28,7 +28,6 @@ clean:
 	rm -f renews.x86 renews.arm release.zip
 
 define install
-	ssh-add
 	# stop running service, ignore failure to stop
 	ssh root@$(host) systemctl stop renews || true
 	scp renews.arm root@$(host):
@@ -38,11 +37,9 @@ define install
 		$(1) > renews.service
 	# copy service to remarkable and enable
 	scp renews.service root@$(host):/etc/systemd/system/renews.service
-	ssh root@$(host) <<- ENDSSH
-		systemctl daemon-reload
-		systemctl enable renews
-		systemctl restart renews
-	ENDSSH
+	ssh root@$(host) systemctl daemon-reload
+	ssh root@$(host) systemctl enable renews
+	ssh root@$(host) systemctl restart renews
 endef
 
 # ----- Sources -----
@@ -50,6 +47,10 @@ endef
 .PHONY: install_nyt
 install_nyt: renews.arm
 	$(call install,services/nyt.service)
+
+.PHONY: install_mn
+install_mn: renews.arm
+	$(call install,services/mercury.service)
 
 .PHONY: install_nyt_hq
 install_nyt_hq: renews.arm
@@ -70,6 +71,8 @@ install_picsum: renews.arm
 .PHONY: install_cah
 install_cah: renews.arm
 	$(call install,services/cah.service)
+
+
 
 # .PHONY: install_wikipotd
 # install_wikipotd: renews.arm
