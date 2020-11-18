@@ -1,7 +1,7 @@
 .ONESHELL:
 .SILENT:
 
-host=remarkable
+host=10.11.99.1
 timezone=America/Chicago
 cooldown=3600
 
@@ -47,10 +47,6 @@ endef
 .PHONY: install_nyt
 install_nyt: renews.arm
 	$(call install,services/nyt.service)
-
-.PHONY: install_mn
-install_mn: renews.arm
-	$(call install,services/mercury.service)
 
 .PHONY: install_nyt_hq
 install_nyt_hq: renews.arm
