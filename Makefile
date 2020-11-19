@@ -37,6 +37,8 @@ define install
 		-e "s|COOLDOWN|$(cooldown)|" \
 		-e "s|KEYWORDS|$(KEYWORDS)|" \
 		$(1) > renews.service
+	# back up suspend screen
+	ssh root@(host) cp -n /usr/share/remarkable/suspended.png /usr/share/remarkable/suspended_backup.png
 	# copy service to remarkable and enable
 	scp renews.service root@$(host):/etc/systemd/system/renews.service
 	ssh root@$(host) <<- ENDSSH
