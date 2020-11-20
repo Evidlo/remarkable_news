@@ -23,7 +23,7 @@ func wait_online(x chan int) {
 	// dbus filter for getting WiFi state change from wpa_supplicant
 	// see `dbus-monitor --system`
 	var rules = []string{
-		"interface='org.freedesktop.DBus.Properties',path='/org/freedesktop/network1/link/_343',member='PropertiesChanged'",
+		"interface='org.freedesktop.DBus.Properties',arg0='org.freedesktop.network1.Link',member='PropertiesChanged'",
 	}
 
 	// begin monitoring dbus events
