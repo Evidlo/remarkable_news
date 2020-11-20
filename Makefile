@@ -28,6 +28,7 @@ clean:
 	rm -f renews.x86 renews.arm release.zip
 
 define install
+	ssh-add
 	# stop running service, ignore failure to stop
 	ssh root@$(host) systemctl stop renews || true
 	scp renews.arm root@$(host):
