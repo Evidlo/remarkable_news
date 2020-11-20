@@ -1,5 +1,6 @@
 .ONESHELL:
-.SILENT:
+# .SILENT:
+SHELL:=/bin/bash
 
 host=10.11.99.1
 timezone=America/Chicago
@@ -28,6 +29,8 @@ clean:
 	rm -f renews.x86 renews.arm release.zip
 
 define install
+	eval "$(ssh-agent -s)"
+	eval $(shell ssh-agent -s)
 	ssh-add
 	# stop running service, ignore failure to stop
 	ssh root@$(host) systemctl stop renews || true
@@ -37,8 +40,8 @@ define install
 		-e "s|COOLDOWN|$(cooldown)|" \
 		-e "s|KEYWORDS|$(KEYWORDS)|" \
 		$(1) > renews.service
-	# back up suspend screen
-	ssh root@(host) cp -n /usr/share/remarkable/suspended.png /usr/share/remarkable/suspended_backup.png
+	# back up suspend screen.  don't overwrite existing file
+	ssh root@$(host) "cd /usr/share/remarkable/; ls suspended_back.png 2> /dev/null || cp suspended.png suspended_back.png"
 	# copy service to remarkable and enable
 	scp renews.service root@$(host):/etc/systemd/system/renews.service
 	ssh root@$(host) <<- ENDSSH
