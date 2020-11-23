@@ -97,11 +97,12 @@ func main() {
 						continue
 					}
 				}else{
+					formattedUrl := url
 					if *format {
-						*url = format_url(*url, *timezone)
+						*formattedUrl = format_url(*url, *timezone)
 						debug("PDF URL: ", *url)
 					}
-					pdf_img(*url, *output)
+					pdf_img(*formattedUrl, *output)
 				}
 				
 			} else {
