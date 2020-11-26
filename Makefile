@@ -1,6 +1,5 @@
 .ONESHELL:
 # .SILENT:
-SHELL:=/bin/bash
 
 host=10.11.99.1
 timezone=America/Chicago
@@ -29,11 +28,9 @@ clean:
 	rm -f renews.x86 renews.arm release.zip
 
 define install
-	eval "$(ssh-agent -s)"
 	eval $(shell ssh-agent -s)
-	ssh-add
 	# stop running service, ignore failure to stop
-	ssh root@$(host) systemctl stop renews || true
+	ssh -o AddKeysToAgent=yes root@$(host) systemctl stop renews || true
 	scp renews.arm root@$(host):
 	# substitute timezone/cooldown/KEYWORDS arguments
 	sed -e "s|TZ|$(timezone)|" \
