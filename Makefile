@@ -28,6 +28,7 @@ clean:
 	rm -f renews.x86 renews.arm release.zip
 
 define install
+	# make sure ssh agent is running
 	eval $(shell ssh-agent -s)
 	# stop running service, ignore failure to stop
 	ssh -o AddKeysToAgent=yes root@$(host) systemctl stop renews || true
@@ -38,14 +39,13 @@ define install
 		-e "s|KEYWORDS|$(KEYWORDS)|" \
 		$(1) > renews.service
 	# back up suspend screen.  don't overwrite existing file
+	# busybox cp doesn't have -n option, do a hacky alternative
 	ssh root@$(host) "cd /usr/share/remarkable/; ls suspended_back.png 2> /dev/null || cp suspended.png suspended_back.png"
 	# copy service to remarkable and enable
 	scp renews.service root@$(host):/etc/systemd/system/renews.service
-	ssh root@$(host) <<- ENDSSH
-		systemctl daemon-reload
-		systemctl enable renews
-		systemctl restart renews
-	ENDSSH
+	ssh root@$(host) systemctl daemon-reload
+	ssh root@$(host) systemctl enable renews
+	ssh root@$(host) systemctl restart renews
 endef
 
 # ----- Sources -----
