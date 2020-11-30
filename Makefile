@@ -77,6 +77,8 @@ install_loremflickr: renews.arm
 install_cah: renews.arm
 	$(call install,services/cah.service)
 
+
+
 # .PHONY: install_wikipotd
 # install_wikipotd: renews.arm
 # 	$(call install,services/wikipotd.service)
