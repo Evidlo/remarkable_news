@@ -1,0 +1,17 @@
+[Unit]
+Description=New York Times PDF
+
+[Service]
+ExecStart=/home/root/renews.arm \
+    -output /usr/share/remarkable/suspended.png \
+    -verbose \
+    -timezone TZ \
+    -cooldown COOLDOWN \
+    -url https://cdn.newseum.org/dfp/pdf%%d/NY_NYT.pdf \
+    -pdf \
+    -strftime \
+    -mode fill
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

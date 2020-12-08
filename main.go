@@ -19,6 +19,7 @@ func main() {
 	timezone := flag.String("timezone", "America/Chicago", "override timezone (tzinfo format)")
 	xpath := flag.String("xpath", "", "xpath to <img> tag in url")
 	test := flag.Bool("test", false, "disable wait-online and cooldown")
+	convPdf := flag.Bool("pdf", false, "convert pdf to image")
 	mode := flag.String("mode", "fill", "image scaling mode (fill, center)")
 	scale := flag.Float64("scale", 1, "scale image prior to centering")
 	// top := flag.Int("top", 0, "crop from top")
@@ -36,21 +37,30 @@ func main() {
 	var err error
 
 	// download/rescale image, then quit
-	if *test {
-		// use a built-in image source
-		if *source != "" {
-			img, err = sources[*source](*timezone)
+	if *test {	
+		if *convPdf {
+			//probably needs a bit of a refactor but this is the first time ive ever used go
+			if *format {
+				*url = format_url(*url, *timezone)
+				debug("PDF URL: ", *url)
+			}
+			pdf_img(*url, *output)
 		} else {
-			img, err = custom(*url, *format, *timezone, *xpath)
-		}
+			// use a built-in image source
+			if *source != "" {
+				img, err = sources[*source](*timezone)
+			} else {
+				img, err = custom(*url, *format, *timezone, *xpath)
+			}
 
-		if err != nil {
-			panic(err)
+			if err != nil {
+				panic(err)
+			}
+			img = adjust(img, *mode, *scale)
+			imaging.Save(img, *output)
+			debug("Image saved to ", *output)
 		}
-		// img = adjust(img, *top, *left, *right, *bottom)
-		img = adjust(img, *mode, *scale)
-		imaging.Save(img, *output)
-		debug("Image saved to ", *output)
+		
 	} else {
 		// initialize with zero date
 		time_last_success := time.Time{};
@@ -70,27 +80,35 @@ func main() {
 			// make sure we don't hammer server every time wifi is turned on
 			if time.Now().Sub(time_last_success).Seconds() > float64(*cooldown) {
 
-				if *source != "" {
-					img, err = sources[*source](*timezone)
-				} else {
-					img, err = custom(*url, *format, *timezone, *xpath)
+				if(!*convPdf){
+					if *source != "" {
+						img, err = sources[*source](*timezone)
+					} else {
+						img, err = custom(*url, *format, *timezone, *xpath)
+					}
+	
+					if err == nil {
+						time_last_success = time.Now()
+						img = adjust(img, *mode, *scale)
+						imaging.Save(img, *output)
+						debug("Image saved to ", *output)
+					} else {
+						fmt.Println(err)
+						continue
+					}
+				}else{
+					formattedUrl := url
+					if *format {
+						*formattedUrl = format_url(*url, *timezone)
+						debug("PDF URL: ", *url)
+					}
+					pdf_img(*formattedUrl, *output)
 				}
-
-				if err == nil {
-					time_last_success = time.Now()
-				} else {
-					fmt.Println(err)
-					continue
-				}
+				
 			} else {
 				debug("Hit cooldown limit")
 				continue
 			}
-
-			// img = adjust(img, *top, *left, *right, *bottom)
-			img = adjust(img, *mode, *scale)
-			imaging.Save(img, *output)
-			debug("Image saved to ", *output)
 		}
 	}
 }
