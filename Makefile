@@ -15,7 +15,7 @@ renews.x86:
 # get latest prebuilt releases
 .PHONY: download_prebuilt
 download_prebuilt:
-	curl -O http://github.com/evidlo/remarkable_news/releases/latest/download/release.zip
+	curl -LO http://github.com/evidlo/remarkable_news/releases/latest/download/release.zip
 	unzip release.zip
 
 # build release
