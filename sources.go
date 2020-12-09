@@ -13,11 +13,11 @@ import (
 	"github.com/nfnt/resize"
 )
 
-var sources = map[string] func(string) (image.Image, error) {
+var sources = map[string] func() (image.Image, error) {
 	"natgeo": natgeo,
 }
 
-func natgeo(timezone string) (image.Image, error){
+func natgeo() (image.Image, error){
 	url := "https://www.nationalgeographic.com/photography/photo-of-the-day/_jcr_content/.gallery.json"
 
 	imgurl, err := get_xpath(url, "/items/*[1]/image/uri", "json")
@@ -46,14 +46,14 @@ func natgeo(timezone string) (image.Image, error){
 
 
 // function for grabbing custom sources
-func custom(url string, format bool, timezone, xpath string) (image.Image, error){
+func custom(url string, format bool, xpath string) (image.Image, error){
 
 	debug("Beginning download")
 
 	// ----- URL strftime formatting -----
 
 	if format {
-		url = format_url(url, timezone)
+		url = format_url(url)
 	}
 
 	// ----- image XPath handling -----

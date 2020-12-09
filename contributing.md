@@ -43,8 +43,6 @@ Here is an example command which I used for testing while creating the Calvin an
             enable strftime formatting in URL
       -test
             disable wait-online and cooldown
-      -timezone string
-            override timezone (tzinfo format) (default "America/Chicago")
       -url string
             input URL
       -verbose

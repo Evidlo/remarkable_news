@@ -5,7 +5,6 @@ Description=New York Times
 ExecStart=/home/root/renews.arm \
     -output /usr/share/remarkable/suspended.png \
     -verbose \
-    -timezone TZ \
     -cooldown COOLDOWN \
     -url https://cdn.newseum.org/dfp/jpg%%d/lg/NY_NYT.jpg \
     -strftime \

@@ -5,7 +5,6 @@ Description=Washington Post
 ExecStart=/home/root/renews.arm \
     -output /usr/share/remarkable/suspended.png \
     -verbose \
-    -timezone TZ \
     -cooldown COOLDOWN \
     -url https://i.prcdn.co/img?file=1047%%Y%%m%%d00000000001001&page=1&scale=246 \
     -strftime \

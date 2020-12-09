@@ -113,20 +113,12 @@ func get_xpath(url, xpath, data_format string) (string, error) {
 	panic(`Invalid data_format`)
 }
 
-func format_url(url, timezone string) string {
+func format_url(url string) string {
 	// format url containing strftime-style datecodes
 
-	// override default timezone
-	if timezone != "" {
-		tz, err := time.LoadLocation(timezone)
-		check(err, "")
-		url, err = strftime.Format(url, time.Now().In(tz))
-		check(err, "")
-	} else {
-		var err error
-		url, err = strftime.Format(url, time.Now())
-		check(err, "")
-	}
+	var err error
+	url, err = strftime.Format(url, time.Now())
+	check(err, "")
 	debug("strftime formatted URL:", url)
 
 	return url

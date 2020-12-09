@@ -1,7 +1,6 @@
 # .SILENT:
 
 host=10.11.99.1
-timezone=America/Chicago
 cooldown=3600
 
 renews.arm:
@@ -32,9 +31,8 @@ define install
 	# stop running service, ignore failure to stop
 	ssh -o AddKeysToAgent=yes root@$(host) systemctl stop renews || true
 	scp renews.arm root@$(host):
-	# substitute timezone/cooldown/KEYWORDS arguments
-	sed -e "s|TZ|$(timezone)|" \
-		-e "s|COOLDOWN|$(cooldown)|" \
+	# substitute COOLDOWN/KEYWORDS arguments
+	sed -e "s|COOLDOWN|$(cooldown)|" \
 		-e "s|KEYWORDS|$(KEYWORDS)|" \
 		$(1) > renews.service
 	# back up suspend screen.  don't overwrite existing file

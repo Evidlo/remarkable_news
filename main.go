@@ -16,7 +16,6 @@ func main() {
 	source := flag.String("source", "", "use builtin source and scaling options")
 	format := flag.Bool("strftime", false, "enable strftime formatting in URL")
 	verbose := flag.Bool("verbose", false, "enable debug output")
-	timezone := flag.String("timezone", "America/Chicago", "override timezone (tzinfo format)")
 	xpath := flag.String("xpath", "", "xpath to <img> tag in url")
 	test := flag.Bool("test", false, "disable wait-online and cooldown")
 	mode := flag.String("mode", "fill", "image scaling mode (fill, center)")
@@ -39,9 +38,9 @@ func main() {
 	if *test {
 		// use a built-in image source
 		if *source != "" {
-			img, err = sources[*source](*timezone)
+			img, err = sources[*source]()
 		} else {
-			img, err = custom(*url, *format, *timezone, *xpath)
+			img, err = custom(*url, *format, *xpath)
 		}
 
 		if err != nil {
@@ -71,9 +70,9 @@ func main() {
 			if time.Now().Sub(time_last_success).Seconds() > float64(*cooldown) {
 
 				if *source != "" {
-					img, err = sources[*source](*timezone)
+					img, err = sources[*source]()
 				} else {
-					img, err = custom(*url, *format, *timezone, *xpath)
+					img, err = custom(*url, *format, *xpath)
 				}
 
 				if err == nil {
