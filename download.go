@@ -8,6 +8,7 @@ import (
 	// "fmt"
 	"net/url"
 	"errors"
+	"strconv"
 	"github.com/lestrrat-go/strftime"
 )
 
@@ -116,9 +117,19 @@ func get_xpath(url, xpath, data_format string) (string, error) {
 func format_url(url string) string {
 	// format url containing strftime-style datecodes
 
+	// add custom format code %e for non-zero-padded day
+	format_e := strftime.AppendFunc(func(b []byte, t time.Time) []byte {
+		day := int(t.Day())
+		return append(b, strconv.Itoa(day)...)
+	})
+
 	var err error
-	url, err = strftime.Format(url, time.Now())
+	f, err := strftime.New(
+		url,
+		strftime.WithSpecification('e', format_e),
+	)
 	check(err, "")
+	url = f.FormatString(time.Now())
 	debug("strftime formatted URL:", url)
 
 	return url
