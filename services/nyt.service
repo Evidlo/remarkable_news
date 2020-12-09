@@ -6,7 +6,7 @@ ExecStart=/home/root/renews.arm \
     -output /usr/share/remarkable/suspended.png \
     -verbose \
     -cooldown COOLDOWN \
-    -url https://cdn.newseum.org/dfp/jpg%%d/lg/NY_NYT.jpg \
+    -url https://cdn.newseum.org/dfp/jpg%%e/lg/NY_NYT.jpg \
     -strftime \
     -mode fill
 Restart=always
