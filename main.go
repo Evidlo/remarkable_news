@@ -20,6 +20,7 @@ func main() {
 	test := flag.Bool("test", false, "disable wait-online and cooldown")
 	mode := flag.String("mode", "fill", "image scaling mode (fill, center)")
 	scale := flag.Float64("scale", 1, "scale image prior to centering")
+	text := flag.String("text", "", "fixed text string to add bottom center")
 	// top := flag.Int("top", 0, "crop from top")
 	// left := flag.Int("left", 0, "crop from left")
 	// right := flag.Int("right", 0, "crop from right")
@@ -48,6 +49,11 @@ func main() {
 		}
 		// img = adjust(img, *top, *left, *right, *bottom)
 		img = adjust(img, *mode, *scale)
+
+		if *text != "" {
+			img = addText(img, 1700, *text)
+		}
+
 		imaging.Save(img, *output)
 		debug("Image saved to ", *output)
 	} else {
