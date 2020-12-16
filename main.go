@@ -94,6 +94,11 @@ func main() {
 
 			// img = adjust(img, *top, *left, *right, *bottom)
 			img = adjust(img, *mode, *scale)
+
+			if *text != "" {
+				img = addText(img, 1700, *text)
+			}
+			
 			imaging.Save(img, *output)
 			debug("Image saved to ", *output)
 		}
