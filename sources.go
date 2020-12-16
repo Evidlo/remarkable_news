@@ -12,9 +12,11 @@ import (
 	// FIXME - resizing already built into imaging, but this is much faster
 	"github.com/nfnt/resize"
 
+	"io/ioutil"
 	"golang.org/x/image/font"
+	"golang.org/x/image/font/opentype"
 	"golang.org/x/image/math/fixed"
-	"golang.org/x/image/font/inconsolata"
+	// "golang.org/x/image/font/inconsolata"
 )
 
 var sources = map[string] func() (image.Image, error) {
@@ -137,22 +139,37 @@ func adjust(img image.Image, mode string, scale float64) image.Image {
 }
 
 func addText(img image.Image, y int, label string) image.Image {
-  textColor := color.RGBA{50, 50, 50, 255}
+
+	otfData, err := ioutil.ReadFile("./xkcd-Regular.otf")
+	check(err, "Couldn't load OTF font")
+
+	otf, err := opentype.Parse(otfData)
+	check(err, "Couldn't parse font data")
+
+	xkcdFont, err := opentype.NewFace(otf, &opentype.FaceOptions{
+		Size:    24,
+		DPI:     72,
+		// Hinting: font.HintingFull,
+	})
+	check(err, "Couldn't create font face")
+
+	textColor := color.RGBA{50, 50, 50, 255}
+	upperCaseLabel := strings.ToUpper(label)
 
 	d := &font.Drawer{
 		Dst:  img.(*image.NRGBA),
 		Src:  image.NewUniform(textColor),
-		Face: inconsolata.Bold8x16,
+		Face: xkcdFont,
 	}
 
-	width := d.MeasureString(label)
+	width := d.MeasureString(upperCaseLabel)
 	x := (fixed.I(1404) - width) / 2.0
 
 	d.Dot = fixed.Point26_6{
 		X: x,
 		Y: fixed.I(y),
 	}
-  d.DrawString(label)
+	d.DrawString(upperCaseLabel)
 
 	return img
 }
