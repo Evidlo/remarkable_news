@@ -47,15 +47,8 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		// img = adjust(img, *top, *left, *right, *bottom)
-		img = adjust(img, *mode, *scale)
 
-		if *text != "" {
-			img = addText(img, 1700, *text)
-		}
-
-		imaging.Save(img, *output)
-		debug("Image saved to ", *output)
+		processImage(img, *mode, *scale, *text, *output)
 	} else {
 		// initialize with zero date
 		time_last_success := time.Time{};
@@ -92,15 +85,19 @@ func main() {
 				continue
 			}
 
-			// img = adjust(img, *top, *left, *right, *bottom)
-			img = adjust(img, *mode, *scale)
-
-			if *text != "" {
-				img = addText(img, 1700, *text)
-			}
-			
-			imaging.Save(img, *output)
-			debug("Image saved to ", *output)
+			processImage(img, *mode, *scale, *text, *output)
 		}
 	}
+}
+
+func processImage(img image.Image, mode string, scale float64, text string, output string) {
+	// img = adjust(img, *top, *left, *right, *bottom)
+	img = adjust(img, mode, scale)
+
+	if text != "" {
+		img = addText(img, 1700, text)
+	}
+
+	imaging.Save(img, output)
+	debug("Image saved to ", output)
 }
