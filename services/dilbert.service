@@ -1,0 +1,17 @@
+[Unit]
+Description=Dilbert
+
+[Service]
+ExecStart=/home/root/renews.arm \
+    -output /usr/share/remarkable/suspended.png \
+    -verbose \
+    -cooldown COOLDOWN \
+    -url https://dilbert.com/strip/%%Y-%%m-%%d \
+    -xpath '//img[@class="img-responsive img-comic"]/@src' \
+    -strftime \
+    -mode fill \
+    -scale 0.9
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

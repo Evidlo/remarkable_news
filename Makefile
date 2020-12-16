@@ -76,6 +76,9 @@ install_loremflickr: renews.arm
 install_cah: renews.arm
 	$(call install,services/cah.service)
 
+.PHONY: install_dilbert
+install_dilbert: renews.arm
+	$(call install,services/dilbert.service)
 
 
 # .PHONY: install_wikipotd
