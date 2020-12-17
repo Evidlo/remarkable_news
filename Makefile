@@ -39,8 +39,9 @@ define install
 	# back up suspend screen.  don't overwrite existing file
 	# busybox cp doesn't have -n option, do a hacky alternative
 	ssh root@$(host) "cd /usr/share/remarkable/; ls suspended_back.png 2> /dev/null || cp suspended.png suspended_back.png"
-	# copy service to remarkable and enable
+	# copy service and font to remarkable and enable
 	scp renews.service root@$(host):/etc/systemd/system/renews.service
+	scp xkcd-Regular.otf root@$(host):/xkcd-Regular.otf
 	ssh root@$(host) systemctl daemon-reload
 	ssh root@$(host) systemctl enable renews
 	ssh root@$(host) systemctl restart renews

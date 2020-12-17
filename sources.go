@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"fmt"
 	"strings"
+	"os"
 
 	"github.com/disintegration/imaging"
 
@@ -139,6 +140,8 @@ func adjust(img image.Image, mode string, scale float64) image.Image {
 }
 
 func addText(img image.Image, y int, label string) image.Image {
+
+	debug("Adding text to image: ", label)
 
 	otfData, err := ioutil.ReadFile("./xkcd-Regular.otf")
 	check(err, "Couldn't load OTF font")
