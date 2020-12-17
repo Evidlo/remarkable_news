@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"fmt"
 	"strings"
-	"os"
 
 	"github.com/disintegration/imaging"
 
@@ -152,7 +151,6 @@ func addText(img image.Image, y int, label string) image.Image {
 	xkcdFont, err := opentype.NewFace(otf, &opentype.FaceOptions{
 		Size:    24,
 		DPI:     72,
-		// Hinting: font.HintingFull,
 	})
 	check(err, "Couldn't create font face")
 
