@@ -41,7 +41,6 @@ define install
 	ssh root@$(host) "cd /usr/share/remarkable/; ls suspended_back.png 2> /dev/null || cp suspended.png suspended_back.png"
 	# copy service and font to remarkable and enable
 	scp renews.service root@$(host):/etc/systemd/system/renews.service
-	scp xkcd-Regular.otf root@$(host):/xkcd-Regular.otf
 	ssh root@$(host) systemctl daemon-reload
 	ssh root@$(host) systemctl enable renews
 	ssh root@$(host) systemctl restart renews
