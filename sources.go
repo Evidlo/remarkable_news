@@ -143,7 +143,7 @@ func addText(img image.Image, y int, label string) image.Image {
 
 	ttfData, err := ioutil.ReadFile("./NotoSerif-Regular.ttf")
 	if err != nil {
-		ttfData, err = ioutil.ReadFile("/usr/share/fonts/ttf/NotoSerif-Regular.ttf")
+		ttfData, err = ioutil.ReadFile("/usr/share/fonts/ttf/noto/NotoSerif-Regular.ttf")
 	}
 	check(err, "Couldn't load TTF font")
 
