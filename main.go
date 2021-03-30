@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/disintegration/imaging"
 	"image"
+	"os"
 	"time"
 )
 
@@ -49,8 +50,13 @@ func main() {
 		return
 	}
 
-	// initialize with zero date
-	time_last_success := time.Time{}
+	var time_last_success time.Time
+
+	if stat, err := os.Stat(*output); err == nil {
+		time_last_success = stat.ModTime()
+	} else {
+		time_last_success = time.Time{}
+	}
 
 	// loop forever and wait for network online events
 	for {
