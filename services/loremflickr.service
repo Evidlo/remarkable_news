@@ -1,5 +1,7 @@
 [Unit]
 Description=LoremFlickr
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 ExecStart=/home/root/renews.arm \
