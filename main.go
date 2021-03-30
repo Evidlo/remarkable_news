@@ -2,10 +2,10 @@ package main
 
 import (
 	"flag"
-	"time"
 	"fmt"
-	"image"
 	"github.com/disintegration/imaging"
+	"image"
+	"time"
 )
 
 func main() {
@@ -20,11 +20,7 @@ func main() {
 	test := flag.Bool("test", false, "disable wait-online and cooldown")
 	mode := flag.String("mode", "fill", "image scaling mode (fill, center)")
 	scale := flag.Float64("scale", 1, "scale image prior to centering")
-	// top := flag.Int("top", 0, "crop from top")
-	// left := flag.Int("left", 0, "crop from left")
-	// right := flag.Int("right", 0, "crop from right")
-	// bottom := flag.Int("bottom", 0, "crop from bottom")
-	cooldown := flag.Int("cooldown", 3600, "minimum seconds to wait before attempting download again")
+	cooldown := *flag.Int64("cooldown", 3600, "minimum seconds to wait before attempting download again")
 	flag.Parse()
 
 	if *verbose {
@@ -50,46 +46,38 @@ func main() {
 		img = adjust(img, *mode, *scale)
 		imaging.Save(img, *output)
 		debug("Image saved to ", *output)
-	} else {
-		// initialize with zero date
-		time_last_success := time.Time{};
+		return
+	}
 
-		online := make(chan int)
-		go wait_online(online)
+	// initialize with zero date
+	time_last_success := time.Time{}
 
-		// loop forever and wait for network online events
-		for {
-			// wait for network online message from wpa supplicant
-			<- online
-			debug("Network online")
-
-			// FIXME - need to wait a few seconds for DNS?
-			time.Sleep(5 * time.Second)
-
-			// make sure we don't hammer server every time wifi is turned on
-			if time.Now().Sub(time_last_success).Seconds() > float64(*cooldown) {
-
-				if *source != "" {
-					img, err = sources[*source]()
-				} else {
-					img, err = custom(*url, *format, *xpath)
-				}
-
-				if err == nil {
-					time_last_success = time.Now()
-				} else {
-					fmt.Println(err)
-					continue
-				}
-			} else {
-				debug("Hit cooldown limit")
-				continue
-			}
-
-			// img = adjust(img, *top, *left, *right, *bottom)
-			img = adjust(img, *mode, *scale)
-			imaging.Save(img, *output)
-			debug("Image saved to ", *output)
+	// loop forever and wait for network online events
+	for {
+		if time.Now().Sub(time_last_success).Seconds() < float64(cooldown) {
+			debug("Hit cooldown limit")
+			time.Sleep(time.Duration(cooldown) * time.Second)
+			continue
 		}
+
+		if *source != "" {
+			img, err = sources[*source]()
+		} else {
+			img, err = custom(*url, *format, *xpath)
+		}
+
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		img = adjust(img, *mode, *scale)
+		imaging.Save(img, *output)
+		debug("Image saved to ", *output)
+		time_last_success = time.Now()
+
+		wait_for := time.Duration(cooldown) * time.Second
+		debug(fmt.Sprintf("Sleeping for %v", wait_for))
+		time.Sleep(wait_for)
 	}
 }
