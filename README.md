@@ -4,7 +4,11 @@ reMarkable service to automatically download daily newspaper/comic as your suspe
 
 ![demo](pic.png)
 
+Requires [remarkable-hacks](https://github.com/ddvk/remarkable-hacks) to be installed for software versions >=2.5.0.27
+
 ## Quickstart (Linux/OSX)
+
+Install
 
     git clone http://github.com/evidlo/remarkable_news && cd remarkable_news
     make download_prebuilt
