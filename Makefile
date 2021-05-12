@@ -1,7 +1,7 @@
 .ONESHELL:
 # .SILENT:
 
-host=remarkable
+host=10.11.99.1
 cooldown=3600
 
 renews.arm:
