@@ -1,0 +1,15 @@
+[Unit]
+Description=The Guardian (UK)
+
+[Service]
+ExecStart=/home/root/renews.arm \
+    -output /usr/share/remarkable/suspended.png \
+    -verbose \
+    -cooldown COOLDOWN \
+    -url https://cdn.freedomforum.org/dfp/jpg%%e/lg/UK_TG.jpg \
+    -strftime \
+    -mode fill
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

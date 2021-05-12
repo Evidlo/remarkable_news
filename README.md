@@ -34,6 +34,7 @@ Install [WSL](https://docs.microsoft.com/en-us/learn/modules/get-started-with-wi
 - Picsum (random images) - `make install_picsum`
 - LoremFlickr (random images) - `make install_loremflickr KEYWORDS=memphis` (example will give random pictures matching the keyword "memphis", insert your own keywords in a comma separated list e.g. `KEYWORDS=city,building`)
 - Calvin and Hobbes - `make install_cah`
+- The Guardian [UK] (slightly low resolution) - `make install_uk_tg`
 <!-- - Wikipedia Picture of the Day - `make install_wikipotd` -->
 
 

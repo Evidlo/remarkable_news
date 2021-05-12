@@ -80,6 +80,9 @@ install_cah: renews.arm
 install_dilbert: renews.arm
 	$(call install,services/dilbert.service)
 
+.PHONY: install_uk_tg
+install_uk_tg: renews.arm
+	$(call install,services/uk_tg.service)
 
 # .PHONY: install_wikipotd
 # install_wikipotd: renews.arm
