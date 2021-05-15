@@ -1,10 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"net/http"
-	"fmt"
 	"strings"
 
 	"github.com/disintegration/imaging"
@@ -13,11 +13,11 @@ import (
 	"github.com/nfnt/resize"
 )
 
-var sources = map[string] func() (image.Image, error) {
+var sources = map[string]func() (image.Image, error){
 	"natgeo": natgeo,
 }
 
-func natgeo() (image.Image, error){
+func natgeo() (image.Image, error) {
 	url := "https://www.nationalgeographic.com/photography/photo-of-the-day/_jcr_content/.gallery.json"
 
 	imgurl, err := get_xpath(url, "/items/*[1]/image/uri", "json")
@@ -44,17 +44,16 @@ func natgeo() (image.Image, error){
 	return img, nil
 }
 
-
 // function for grabbing custom sources
-func custom(url string, format bool, xpath string) (image.Image, error){
-
-	debug("Beginning download")
+func custom(url string, format bool, xpath string) (image.Image, error) {
 
 	// ----- URL strftime formatting -----
 
 	if format {
 		url = format_url(url)
 	}
+
+	debug("Downloading %v", url)
 
 	// ----- image XPath handling -----
 
@@ -118,7 +117,7 @@ func adjust(img image.Image, mode string, scale float64) image.Image {
 	}
 	if scale != 1 {
 		img_width := float64(img.Bounds().Max.X)
-		img = resize.Resize(uint(scale * img_width), 0, img, resize.Bilinear)
+		img = resize.Resize(uint(scale*img_width), 0, img, resize.Bilinear)
 	}
 
 	// put image in center of screen
