@@ -8,7 +8,7 @@ Requires [remarkable-hacks](https://github.com/ddvk/remarkable-hacks) to be inst
 
 ## Install
 
-    wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin nyt 
+    wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin nyt
 
 This will install and start the update service on the reMarkable.  Every time you connect to WiFi, it will try to grab the latest front page from The New York Times.
 
@@ -20,15 +20,23 @@ Install [WSL](https://docs.microsoft.com/en-us/learn/modules/get-started-with-wi
 
 ## Supported News/Comics Sources
 
-- XKCD - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin xkcd`
-- Washington Post (only updates weekdays) - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin wp`
-- New York Times (slightly low resolution) - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin nyt`
-- New York Times (high quality provided by [acrogenesis/nyt-today](https://github.com/acrogenesis/nyt-today)) - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin xkcd`
-- Picsum (random images) - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin picsum`
-- LoremFlickr (random images) - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin loremflicker`
-    - (edit `/etc/systemd/system/renews.service` for custom image downloads e.g. `KEYWORDS=cats,dogs,birds`)
-- Calvin and Hobbes - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin cah`
-- The Guardian - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin uk_tg`
+- XKCD 
+    - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin xkcd`
+- Washington Post (only updates weekdays) 
+    - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin wp`
+- New York Times (slightly low resolution) 
+    - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin nyt`
+- New York Times (high quality provided by [acrogenesis/nyt-today](https://github.com/acrogenesis/nyt-today)) 
+    - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin xkcd`
+- Picsum (random images) 
+    - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin picsum`
+- LoremFlickr (random images) 
+    - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin loremflicker`
+    - edit `/etc/systemd/system/renews.service` for custom image downloads e.g. `KEYWORDS=cats,dogs,birds`
+- Calvin and Hobbes 
+    - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin cah`
+- The Guardian 
+    - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin uk_tg`
 <!-- - Wikipedia Picture of the Day - `make install_wikipotd` -->
 
 

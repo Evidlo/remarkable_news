@@ -27,4 +27,4 @@ fi
 # reload systemd and remove extra files
 systemctl daemon-reload
 systemctl enable --now renews.service
-rm renews.x86 renews.zip
+rm renews.x86 release.zip
