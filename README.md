@@ -46,7 +46,7 @@ On the reMarkable
 
     journalctl --unit renews -f
 
-Then disconnect and reconnect WiFi to trigger a download.  remarkable_news will only download at a maximum of once per hour to avoid burdening the server.
+Then disconnect and reconnect WiFi to trigger a download.  `remarkable_news` will only download at a maximum of once per hour to avoid burdening the server.
 
 ## Contributing
 
