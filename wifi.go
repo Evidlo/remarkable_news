@@ -13,7 +13,7 @@ import (
 func wait_online(x chan int) {
 	// wait for wpa_supplicant to emit message that we have just connected to a network
 
-	conn, err := dbus.ConnectSystemBus()
+	conn, err := dbus.SystemBus()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Failed to connect to session bus:", err)
 		os.Exit(1)
