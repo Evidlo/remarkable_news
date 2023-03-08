@@ -19,10 +19,7 @@ then
     COOLDOWN=3600
 fi
 sed -i "s|COOLDOWN|${COOLDOWN}|" ${SERVICE}
-if [[ -z $KEYWORDS ]]
-then
-    sed -i "s|KEYWORDS|${KEYWORDS}|" ${SERVICE}
-fi
+sed -i "s|KEYWORDS|${KEYWORDS}|" ${SERVICE}
 
 # reload systemd and remove extra files
 systemctl daemon-reload
