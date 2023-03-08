@@ -44,7 +44,7 @@ func get_url(url string) (*http.Response, error){
 	if response.StatusCode != 200 {
 		// body, _ := ioutil.ReadAll(response.Body)
 		// fmt.Println(body)
-		debug("URL 404")
+		debug("Error.  Response code was:", strconv.Itoa(response.StatusCode))
 		return response, Err404
 	}
 
