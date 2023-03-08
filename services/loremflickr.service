@@ -2,7 +2,7 @@
 Description=LoremFlickr
 
 [Service]
-ExecStart=/home/root/renews.arm \
+ExecStart=/home/root/bin/renews.arm \
     -output /usr/share/remarkable/suspended.png \
     -verbose \
     -cooldown 600 \
