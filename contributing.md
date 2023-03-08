@@ -11,11 +11,13 @@ The easiest news/comics sources to add are those that have a static link to the 
 
 #### Testing on host machine
 
-Run `renews.x86` with the `-test` option.  This disables download cooldown and waiting for WiFi connect.
+[Download](https://github.com/evidlo/remarkable_news/releases/latest/download/release.zip) and run `renews.x86` with the `-test` option.  This disables download cooldown and waiting for WiFi connect.
 
 Here is an example command which I used for testing while creating the Calvin and Hobbes source:
 
     ./renews.x86 -output test.png -verbose -url https://www.gocomics.com/random/calvinandhobbes -xpath '//picture[@class="item-comic-image"]/img/@src' -mode fill -scale 0.9 -test
+    
+This outputs to `test.png`.
 
 #### Usage
 
