@@ -32,8 +32,11 @@ Install [WSL](https://docs.microsoft.com/en-us/learn/modules/get-started-with-wi
 - Picsum (random images) 
     - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin picsum`
 - LoremFlickr (random images) 
-    - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin loremflicker`
-    - edit `/etc/systemd/system/renews.service` for custom image downloads e.g. `KEYWORDS=cats,dogs,birds`
+    - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | KEYWORDS=nature,cats sh /dev/stdin loremflicker`
+    - replace 'nature,cats' with your own keywords
+- Unsplash (random images)
+    - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | KEYWORDS=nature sh /dev/stdin unsplash`
+    - replace 'nature' with your own keywords.  Only one keyword supported
 - Calvin and Hobbes 
     - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin cah`
 - The Guardian 
