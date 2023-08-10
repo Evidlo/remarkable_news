@@ -6,7 +6,7 @@ ExecStart=/home/root/bin/renews.arm \
     -output /usr/share/remarkable/suspended.png \
     -verbose \
     -cooldown COOLDOWN \
-    -url https://source.unsplash.com/random/1872x1404?query=${KEYWORDS}&orientation=LANDSCAPE \
+    -url https://source.unsplash.com/random/1872x1404?query=KEYWORDS&orientation=LANDSCAPE \
     -mode fill \
 Restart=always
 
