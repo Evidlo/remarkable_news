@@ -28,7 +28,7 @@ Install [WSL](https://docs.microsoft.com/en-us/learn/modules/get-started-with-wi
 - New York Times (slightly low resolution) 
     - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin nyt`
 - New York Times (high quality provided by [acrogenesis/nyt-today](https://github.com/acrogenesis/nyt-today)) 
-    - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin xkcd`
+    - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin nyt-hq`
 - Picsum (random images) 
     - `wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin picsum`
 - LoremFlickr (random images) 
