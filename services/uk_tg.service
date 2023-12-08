@@ -6,8 +6,8 @@ ExecStart=/home/root/bin/renews.arm \
     -output /usr/share/remarkable/suspended.png \
     -verbose \
     -cooldown COOLDOWN \
-    -url https://cdn.freedomforum.org/dfp/jpg%%e/lg/UK_TG.jpg \
-    -strftime \
+    -url https://www.frontpages.com/the-guardian \
+    -xpath '//img[@id="giornale-img"]/@src' \
     -mode fill
 Restart=always
 
