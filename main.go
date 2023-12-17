@@ -2,10 +2,13 @@ package main
 
 import (
 	"flag"
-	"time"
 	"fmt"
 	"image"
+	"image/draw"
+	"time"
+
 	"github.com/disintegration/imaging"
+	"golang.org/x/image/font"
 )
 
 func main() {
@@ -17,6 +20,10 @@ func main() {
 	format := flag.Bool("strftime", false, "enable strftime formatting in URL")
 	verbose := flag.Bool("verbose", false, "enable debug output")
 	xpath := flag.String("xpath", "", "xpath to <img> tag in url")
+	xpath_title := flag.String("xpath-title", "", "xpath to title in url")
+	title_font_path := flag.String("title-font-path", "/usr/share/fonts/ttf/noto/NotoSans-Regular.ttf", "path to TTF title font")
+	title_font_size := flag.Float64("title-font-size", 30, "title font size")
+	title_font_dpi := flag.Float64("title-font-dpi", 72, "title font dpi")
 	test := flag.Bool("test", false, "disable wait-online and cooldown")
 	mode := flag.String("mode", "fill", "image scaling mode (fill, center)")
 	scale := flag.Float64("scale", 1, "scale image prior to centering")
@@ -31,7 +38,22 @@ func main() {
 		LOG_LEVEL = "debug"
 	}
 
+	var face font.Face
+	if *xpath_title != "" {
+		face = loadSystemFont(*title_font_path, *title_font_size, *title_font_dpi)
+	}
+
+	handle_image := func(img image.Image, title string) {
+		img = adjust(img, *mode, *scale)
+		if title != "" {
+			addLabelByMiddle(img.(draw.Image), img.Bounds().Max.X/2, 50, face, title)
+		}
+		imaging.Save(img, *output)
+		debug("Image saved to ", *output)
+	}
+
 	var img image.Image
+	var title string
 	var err error
 
 	// download/rescale image, then quit
@@ -40,16 +62,13 @@ func main() {
 		if *source != "" {
 			img, err = sources[*source]()
 		} else {
-			img, err = custom(*url, *format, *xpath)
+			img, title, err = custom(*url, *format, *xpath, *xpath_title)
 		}
 
 		if err != nil {
 			panic(err)
 		}
-		// img = adjust(img, *top, *left, *right, *bottom)
-		img = adjust(img, *mode, *scale)
-		imaging.Save(img, *output)
-		debug("Image saved to ", *output)
+		handle_image(img, title)
 	} else {
 		// initialize with zero date
 		time_last_success := time.Time{};
@@ -72,7 +91,7 @@ func main() {
 				if *source != "" {
 					img, err = sources[*source]()
 				} else {
-					img, err = custom(*url, *format, *xpath)
+					img, title, err = custom(*url, *format, *xpath, *xpath_title)
 				}
 
 				if err == nil {
@@ -86,10 +105,7 @@ func main() {
 				continue
 			}
 
-			// img = adjust(img, *top, *left, *right, *bottom)
-			img = adjust(img, *mode, *scale)
-			imaging.Save(img, *output)
-			debug("Image saved to ", *output)
+			handle_image(img, title)
 		}
 	}
 }

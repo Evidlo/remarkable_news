@@ -1,13 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/color"
+	"image/draw"
 	"net/http"
-	"fmt"
+	"os"
 	"strings"
 
 	"github.com/disintegration/imaging"
+	"github.com/golang/freetype/truetype"
+	"golang.org/x/image/font"
+	"golang.org/x/image/math/fixed"
 
 	// FIXME - resizing already built into imaging, but this is much faster
 	"github.com/nfnt/resize"
@@ -44,9 +49,8 @@ func natgeo() (image.Image, error){
 	return img, nil
 }
 
-
 // function for grabbing custom sources
-func custom(url string, format bool, xpath string) (image.Image, error){
+func custom(url string, format bool, xpath, xpath_title string) (image.Image, string, error) {
 
 	debug("Beginning download")
 
@@ -58,11 +62,19 @@ func custom(url string, format bool, xpath string) (image.Image, error){
 
 	// ----- image XPath handling -----
 
+	var title string
 	var response *http.Response
 	var err error
+
 	// if xpath is provided, assume url is HTML
 	if xpath != "" {
-		debug("Got -xpath.  Trying to extract img url from provided url")
+		if xpath_title != "" {
+			debug("Got -xpath-title. Trying to extract title from provided url")
+			title, err = get_xpath(url, xpath_title, "html")
+			check(err, "")
+		}
+
+		debug("Got -xpath. Trying to extract img url from provided url")
 
 		result, err := get_xpath(url, xpath, "html")
 		check(err, "")
@@ -76,7 +88,7 @@ func custom(url string, format bool, xpath string) (image.Image, error){
 		response, err = get_url(imgurl)
 		if err != nil {
 			debug("Failed to fetch image")
-			return nil, err
+			return nil, "", err
 		}
 
 	} else {
@@ -89,10 +101,10 @@ func custom(url string, format bool, xpath string) (image.Image, error){
 	img, err := imaging.Decode(response.Body)
 	if err != nil {
 		debug("Failed to decode image")
-		return nil, err
+		return nil, "", err
 	}
 
-	return img, nil
+	return img, title, nil
 
 }
 
@@ -130,4 +142,33 @@ func adjust(img image.Image, mode string, scale float64) image.Image {
 	img = imaging.PasteCenter(background, img)
 
 	return img
+}
+
+func loadSystemFont(path string, size, dpi float64) font.Face {
+	fontdata, err := os.ReadFile(path)
+	check(err, "Failed to open font file")
+	font, err := truetype.Parse(fontdata)
+	check(err, "Failed to parse font")
+
+	return truetype.NewFace(font, &truetype.Options{
+		Size: size,
+		DPI:  dpi,
+	})
+}
+
+func addLabelByMiddle(img draw.Image, x, y int, face font.Face, label string) {
+	b, _ := font.BoundString(face, label)
+	x = x - (b.Max.X-b.Min.X).Ceil()/2
+
+	addLabel(img, x, y, face, label)
+}
+
+func addLabel(img draw.Image, x, y int, face font.Face, label string) {
+	d := &font.Drawer{
+		Dst:  img,
+		Src:  image.NewUniform(color.RGBA{0, 0, 0, 255}),
+		Face: face,
+		Dot:  fixed.Point26_6{X: fixed.I(x), Y: fixed.I(y)},
+	}
+	d.DrawString(label)
 }
