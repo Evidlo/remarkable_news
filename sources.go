@@ -50,7 +50,7 @@ func natgeo() (image.Image, error){
 }
 
 // function for grabbing custom sources
-func custom(url string, format bool, xpath, xpath_title string) (image.Image, string, error) {
+func custom(url string, format bool, xpath, xpath_title, xpath_subtitle string) (image.Image, string, string, error) {
 
 	debug("Beginning download")
 
@@ -63,6 +63,7 @@ func custom(url string, format bool, xpath, xpath_title string) (image.Image, st
 	// ----- image XPath handling -----
 
 	var title string
+	var subtitle string
 	var response *http.Response
 	var err error
 
@@ -71,6 +72,11 @@ func custom(url string, format bool, xpath, xpath_title string) (image.Image, st
 		if xpath_title != "" {
 			debug("Got -xpath-title. Trying to extract title from provided url")
 			title, err = get_xpath(url, xpath_title, "html")
+			check(err, "")
+		}
+		if xpath_subtitle != "" {
+			debug("Got -xpath-subtitle. Trying to extract subtitle from provided url")
+			subtitle, err = get_xpath(url, xpath_subtitle, "html")
 			check(err, "")
 		}
 
@@ -88,7 +94,7 @@ func custom(url string, format bool, xpath, xpath_title string) (image.Image, st
 		response, err = get_url(imgurl)
 		if err != nil {
 			debug("Failed to fetch image")
-			return nil, "", err
+			return nil, "", "", err
 		}
 
 	} else {
@@ -101,10 +107,10 @@ func custom(url string, format bool, xpath, xpath_title string) (image.Image, st
 	img, err := imaging.Decode(response.Body)
 	if err != nil {
 		debug("Failed to decode image")
-		return nil, "", err
+		return nil, "", "", err
 	}
 
-	return img, title, nil
+	return img, title, subtitle, nil
 
 }
 
@@ -144,7 +150,7 @@ func adjust(img image.Image, mode string, scale float64) image.Image {
 	return img
 }
 
-func loadSystemFont(path string, size, dpi float64) font.Face {
+func loadSystemFont(path string, size float64) font.Face {
 	fontdata, err := os.ReadFile(path)
 	check(err, "Failed to open font file")
 	font, err := truetype.Parse(fontdata)
@@ -152,7 +158,6 @@ func loadSystemFont(path string, size, dpi float64) font.Face {
 
 	return truetype.NewFace(font, &truetype.Options{
 		Size: size,
-		DPI:  dpi,
 	})
 }
 
@@ -164,6 +169,8 @@ func addLabelByMiddle(img draw.Image, x, y int, face font.Face, label string) {
 }
 
 func addLabel(img draw.Image, x, y int, face font.Face, label string) {
+	debug("Adding label", label)
+
 	d := &font.Drawer{
 		Dst:  img,
 		Src:  image.NewUniform(color.RGBA{0, 0, 0, 255}),

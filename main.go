@@ -21,9 +21,13 @@ func main() {
 	verbose := flag.Bool("verbose", false, "enable debug output")
 	xpath := flag.String("xpath", "", "xpath to <img> tag in url")
 	xpath_title := flag.String("xpath-title", "", "xpath to title in url")
-	title_font_path := flag.String("title-font-path", "/usr/share/fonts/ttf/noto/NotoSans-Regular.ttf", "path to TTF title font")
-	title_font_size := flag.Float64("title-font-size", 30, "title font size")
-	title_font_dpi := flag.Float64("title-font-dpi", 72, "title font dpi")
+	title_str := flag.String("title", "", "title to use instead of xpath-title")
+	title_font_path := flag.String("title-font-path", "/usr/share/fonts/ttf/noto/NotoSans-Bold.ttf", "path to TTF title font")
+	title_font_size := flag.Float64("title-font-size", 50, "title font size")
+	xpath_subtitle := flag.String("xpath-subtitle", "", "xpath to subtitle in url")
+	subtitle_str := flag.String("subtitle", "", "subtitle to use instead of xpath-subtitle")
+	subtitle_font_path := flag.String("subtitle-font-path", "/usr/share/fonts/ttf/noto/NotoSans-Regular.ttf", "path to TTF subtitle font")
+	subtitle_font_size := flag.Float64("subtitle-font-size", 30, "subtitle font size")
 	test := flag.Bool("test", false, "disable wait-online and cooldown")
 	mode := flag.String("mode", "fill", "image scaling mode (fill, center)")
 	scale := flag.Float64("scale", 1, "scale image prior to centering")
@@ -38,15 +42,28 @@ func main() {
 		LOG_LEVEL = "debug"
 	}
 
-	var face font.Face
-	if *xpath_title != "" {
-		face = loadSystemFont(*title_font_path, *title_font_size, *title_font_dpi)
+	var title_face font.Face
+	if *xpath_title != "" || *title_str != "" {
+		title_face = loadSystemFont(*title_font_path, *title_font_size)
+	}
+	var subtitle_face font.Face
+	if *xpath_subtitle != "" || *subtitle_str != "" {
+		subtitle_face = loadSystemFont(*subtitle_font_path, *subtitle_font_size)
 	}
 
-	handle_image := func(img image.Image, title string) {
+	handle_image := func(img image.Image, title, subtitle string) {
 		img = adjust(img, *mode, *scale)
+		if title == "" {
+			title = *title_str
+		}
 		if title != "" {
-			addLabelByMiddle(img.(draw.Image), img.Bounds().Max.X/2, 50, face, title)
+			addLabelByMiddle(img.(draw.Image), img.Bounds().Max.X/2, 100, title_face, title)
+		}
+		if subtitle == "" {
+			subtitle = *subtitle_str
+		}
+		if subtitle != "" {
+			addLabelByMiddle(img.(draw.Image), img.Bounds().Max.X/2, 150, subtitle_face, subtitle)
 		}
 		imaging.Save(img, *output)
 		debug("Image saved to ", *output)
@@ -54,6 +71,7 @@ func main() {
 
 	var img image.Image
 	var title string
+	var subtitle string
 	var err error
 
 	// download/rescale image, then quit
@@ -62,13 +80,13 @@ func main() {
 		if *source != "" {
 			img, err = sources[*source]()
 		} else {
-			img, title, err = custom(*url, *format, *xpath, *xpath_title)
+			img, title, subtitle, err = custom(*url, *format, *xpath, *xpath_title, *xpath_subtitle)
 		}
 
 		if err != nil {
 			panic(err)
 		}
-		handle_image(img, title)
+		handle_image(img, title, subtitle)
 	} else {
 		// initialize with zero date
 		time_last_success := time.Time{};
@@ -91,7 +109,7 @@ func main() {
 				if *source != "" {
 					img, err = sources[*source]()
 				} else {
-					img, title, err = custom(*url, *format, *xpath, *xpath_title)
+					img, title, subtitle, err = custom(*url, *format, *xpath, *xpath_title, *xpath_subtitle)
 				}
 
 				if err == nil {
@@ -105,7 +123,7 @@ func main() {
 				continue
 			}
 
-			handle_image(img, title)
+			handle_image(img, title, subtitle)
 		}
 	}
 }
