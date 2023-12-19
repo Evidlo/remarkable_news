@@ -161,7 +161,8 @@ func loadSystemFont(path string, size float64) font.Face {
 	})
 }
 
-func addLabelByMiddle(img draw.Image, x, y int, face font.Face, label string) {
+func addCenteredLabel(img draw.Image, y int, face font.Face, label string) {
+	x := img.Bounds().Max.X / 2
 	b, _ := font.BoundString(face, label)
 	label_width := (b.Max.X - b.Min.X).Ceil()
 

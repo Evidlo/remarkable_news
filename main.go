@@ -57,13 +57,13 @@ func main() {
 			title = *title_str
 		}
 		if title != "" {
-			addLabelByMiddle(img.(draw.Image), img.Bounds().Max.X/2, 100, title_face, title)
+			addCenteredLabel(img.(draw.Image), 100, title_face, title)
 		}
 		if subtitle == "" {
 			subtitle = *subtitle_str
 		}
 		if subtitle != "" {
-			addLabelByMiddle(img.(draw.Image), img.Bounds().Max.X/2, 150, subtitle_face, subtitle)
+			addCenteredLabel(img.(draw.Image), 150, subtitle_face, subtitle)
 		}
 		imaging.Save(img, *output)
 		debug("Image saved to ", *output)
