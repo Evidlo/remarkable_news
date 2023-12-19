@@ -163,9 +163,31 @@ func loadSystemFont(path string, size float64) font.Face {
 
 func addLabelByMiddle(img draw.Image, x, y int, face font.Face, label string) {
 	b, _ := font.BoundString(face, label)
-	x = x - (b.Max.X-b.Min.X).Ceil()/2
+	label_width := (b.Max.X - b.Min.X).Ceil()
 
-	addLabel(img, x, y, face, label)
+	// Hack: Wrap labels that are too long once
+	if label_width > img.Bounds().Max.X {
+		debug("Label too long, splitting into two lines")
+		left := strings.TrimSpace(label[:len(label)/2])
+		right := strings.TrimSpace(label[len(label)/2:])
+		right_parts := strings.SplitN(right, " ", 2)
+		first_line := left + right_parts[0]
+
+		b, _ = font.BoundString(face, first_line)
+		label_width = (b.Max.X - b.Min.X).Ceil()
+		label_height := (b.Max.Y - b.Min.Y).Ceil()
+		addLabel(img, x-label_width/2, y, face, first_line)
+
+		if len(right_parts) == 2 {
+			second_line := right_parts[1]
+			b, _ = font.BoundString(face, second_line)
+			label_width = (b.Max.X - b.Min.X).Ceil()
+			addLabel(img, x-label_width/2, y+label_height+10, face, second_line)
+		}
+	} else {
+		addLabel(img, x-label_width/2, y, face, label)
+	}
+
 }
 
 func addLabel(img draw.Image, x, y int, face font.Face, label string) {
