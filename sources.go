@@ -1,13 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/color"
+	"image/draw"
 	"net/http"
-	"fmt"
+	"os"
 	"strings"
 
 	"github.com/disintegration/imaging"
+	"github.com/golang/freetype/truetype"
+	"golang.org/x/image/font"
+	"golang.org/x/image/math/fixed"
 
 	// FIXME - resizing already built into imaging, but this is much faster
 	"github.com/nfnt/resize"
@@ -44,9 +49,8 @@ func natgeo() (image.Image, error){
 	return img, nil
 }
 
-
 // function for grabbing custom sources
-func custom(url string, format bool, xpath string) (image.Image, error){
+func custom(url string, format bool, xpath, xpath_title, xpath_subtitle string) (image.Image, string, string, error) {
 
 	debug("Beginning download")
 
@@ -58,11 +62,25 @@ func custom(url string, format bool, xpath string) (image.Image, error){
 
 	// ----- image XPath handling -----
 
+	var title string
+	var subtitle string
 	var response *http.Response
 	var err error
+
 	// if xpath is provided, assume url is HTML
 	if xpath != "" {
-		debug("Got -xpath.  Trying to extract img url from provided url")
+		if xpath_title != "" {
+			debug("Got -xpath-title. Trying to extract title from provided url")
+			title, err = get_xpath(url, xpath_title, "html")
+			check(err, "")
+		}
+		if xpath_subtitle != "" {
+			debug("Got -xpath-subtitle. Trying to extract subtitle from provided url")
+			subtitle, err = get_xpath(url, xpath_subtitle, "html")
+			check(err, "")
+		}
+
+		debug("Got -xpath. Trying to extract img url from provided url")
 
 		result, err := get_xpath(url, xpath, "html")
 		check(err, "")
@@ -76,7 +94,7 @@ func custom(url string, format bool, xpath string) (image.Image, error){
 		response, err = get_url(imgurl)
 		if err != nil {
 			debug("Failed to fetch image")
-			return nil, err
+			return nil, "", "", err
 		}
 
 	} else {
@@ -89,10 +107,10 @@ func custom(url string, format bool, xpath string) (image.Image, error){
 	img, err := imaging.Decode(response.Body)
 	if err != nil {
 		debug("Failed to decode image")
-		return nil, err
+		return nil, "", "", err
 	}
 
-	return img, nil
+	return img, title, subtitle, nil
 
 }
 
@@ -130,4 +148,67 @@ func adjust(img image.Image, mode string, scale float64) image.Image {
 	img = imaging.PasteCenter(background, img)
 
 	return img
+}
+
+func loadFontByPath(path string, size float64) font.Face {
+	fontdata, err := os.ReadFile(path)
+	check(err, "Failed to open font file")
+	loadFont(fontdata, size)
+	font, err := truetype.Parse(fontdata)
+	check(err, "Failed to parse font")
+
+	return truetype.NewFace(font, &truetype.Options{
+		Size: size,
+	})
+}
+
+func loadFont(fontdata []byte, size float64) font.Face {
+	font, err := truetype.Parse(fontdata)
+	check(err, "Failed to parse font")
+
+	return truetype.NewFace(font, &truetype.Options{
+		Size: size,
+	})
+}
+
+func addCenteredLabel(img draw.Image, y int, face font.Face, label string) {
+	x := img.Bounds().Max.X / 2
+	b, _ := font.BoundString(face, label)
+	label_width := (b.Max.X - b.Min.X).Ceil()
+
+	// Hack: Wrap labels that are too long once
+	if label_width > img.Bounds().Max.X {
+		debug("Label too long, splitting into two lines")
+		left := strings.TrimSpace(label[:len(label)/2])
+		right := strings.TrimSpace(label[len(label)/2:])
+		right_parts := strings.SplitN(right, " ", 2)
+		first_line := left + right_parts[0]
+
+		b, _ = font.BoundString(face, first_line)
+		label_width = (b.Max.X - b.Min.X).Ceil()
+		label_height := (b.Max.Y - b.Min.Y).Ceil()
+		addLabel(img, x-label_width/2, y, face, first_line)
+
+		if len(right_parts) == 2 {
+			second_line := right_parts[1]
+			b, _ = font.BoundString(face, second_line)
+			label_width = (b.Max.X - b.Min.X).Ceil()
+			addLabel(img, x-label_width/2, y+label_height+10, face, second_line)
+		}
+	} else {
+		addLabel(img, x-label_width/2, y, face, label)
+	}
+
+}
+
+func addLabel(img draw.Image, x, y int, face font.Face, label string) {
+	debug("Adding label", label)
+
+	d := &font.Drawer{
+		Dst:  img,
+		Src:  image.NewUniform(color.RGBA{0, 0, 0, 255}),
+		Face: face,
+		Dot:  fixed.Point26_6{X: fixed.I(x), Y: fixed.I(y)},
+	}
+	d.DrawString(label)
 }
