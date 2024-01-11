@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"flag"
 	"fmt"
 	"image"
@@ -10,6 +11,15 @@ import (
 	"github.com/disintegration/imaging"
 	"golang.org/x/image/font"
 )
+
+//go:embed fonts/noto/NotoSans-Bold.ttf
+var notosans_bold_ttf []byte
+
+//go:embed fonts/noto/NotoSans-Regular.ttf
+var notosans_regular_ttf []byte
+
+//go:embed fonts/xkcd/xkcd.ttf
+var xkcd_ttf []byte
 
 func main() {
 	// ----- flag parsing -----
@@ -22,11 +32,11 @@ func main() {
 	xpath := flag.String("xpath", "", "xpath to <img> tag in url")
 	xpath_title := flag.String("xpath-title", "", "xpath to title in url")
 	title_str := flag.String("title", "", "title to use instead of xpath-title")
-	title_font_path := flag.String("title-font-path", "/usr/share/fonts/ttf/noto/NotoSans-Bold.ttf", "path to TTF title font")
+	title_font := flag.String("title-font", "", "path to TTF title font or built-in name 'NotoSans-Bold' (default), 'NotoSans-Regular' or 'xkcd'")
 	title_font_size := flag.Float64("title-font-size", 50, "title font size")
 	xpath_subtitle := flag.String("xpath-subtitle", "", "xpath to subtitle in url")
 	subtitle_str := flag.String("subtitle", "", "subtitle to use instead of xpath-subtitle")
-	subtitle_font_path := flag.String("subtitle-font-path", "/usr/share/fonts/ttf/noto/NotoSans-Regular.ttf", "path to TTF subtitle font")
+	subtitle_font := flag.String("subtitle-font", "", "path to TTF subtitle font or built-in name 'NotoSans-Bold', 'NotoSans-Regular' (default) or 'xkcd'")
 	subtitle_font_size := flag.Float64("subtitle-font-size", 30, "subtitle font size")
 	test := flag.Bool("test", false, "disable wait-online and cooldown")
 	mode := flag.String("mode", "fill", "image scaling mode (fill, center)")
@@ -44,11 +54,29 @@ func main() {
 
 	var title_face font.Face
 	if *xpath_title != "" || *title_str != "" {
-		title_face = loadSystemFont(*title_font_path, *title_font_size)
+		switch *title_font {
+		case "NotoSans-Bold", "":
+			title_face = loadFont(notosans_bold_ttf, *title_font_size)
+		case "NotoSans-Regular":
+			title_face = loadFont(notosans_regular_ttf, *title_font_size)
+		case "xkcd":
+			title_face = loadFont(xkcd_ttf, *title_font_size)
+		default:
+			title_face = loadFontByPath(*title_font, *title_font_size)
+		}
 	}
 	var subtitle_face font.Face
 	if *xpath_subtitle != "" || *subtitle_str != "" {
-		subtitle_face = loadSystemFont(*subtitle_font_path, *subtitle_font_size)
+		switch *subtitle_font {
+		case "NotoSans-Bold":
+			subtitle_face = loadFont(notosans_bold_ttf, *subtitle_font_size)
+		case "NotoSans-Regular", "":
+			subtitle_face = loadFont(notosans_regular_ttf, *subtitle_font_size)
+		case "xkcd":
+			subtitle_face = loadFont(xkcd_ttf, *subtitle_font_size)
+		default:
+			subtitle_face = loadFontByPath(*subtitle_font, *subtitle_font_size)
+		}
 	}
 
 	handle_image := func(img image.Image, title, subtitle string) {

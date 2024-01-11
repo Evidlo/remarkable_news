@@ -150,9 +150,19 @@ func adjust(img image.Image, mode string, scale float64) image.Image {
 	return img
 }
 
-func loadSystemFont(path string, size float64) font.Face {
+func loadFontByPath(path string, size float64) font.Face {
 	fontdata, err := os.ReadFile(path)
 	check(err, "Failed to open font file")
+	loadFont(fontdata, size)
+	font, err := truetype.Parse(fontdata)
+	check(err, "Failed to parse font")
+
+	return truetype.NewFace(font, &truetype.Options{
+		Size: size,
+	})
+}
+
+func loadFont(fontdata []byte, size float64) font.Face {
 	font, err := truetype.Parse(fontdata)
 	check(err, "Failed to parse font")
 

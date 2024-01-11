@@ -10,6 +10,8 @@ ExecStart=/home/root/bin/renews.arm \
     -xpath '//div[@id="comic"]/img/@src' \
     -xpath-title '//div[@id="comic"]/img/@alt' \
     -xpath-subtitle '//div[@id="comic"]/img/@title' \
+    -title-font 'xkcd' \
+    -subtitle-font 'xkcd' \
     -mode center \
     -scale 1.75
 Restart=always
