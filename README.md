@@ -13,8 +13,6 @@ This will install and start the update service on the reMarkable.  Every time yo
 
 By default, downloads are rate limited to once per hour (3600 s).  This can be overriden by modifying `/etc/systemd/system/renews.service`
 
-Requires [remarkable-hacks](https://github.com/ddvk/remarkable-hacks) to be installed for software versions >=2.5.0.27
-
 ## Install (Windows)
 
 Install [WSL](https://docs.microsoft.com/en-us/learn/modules/get-started-with-windows-subsystem-for-linux/2-enable-and-install), then follow the Linux/OSX instructions.  This has not been tested.
