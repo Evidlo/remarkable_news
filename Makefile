@@ -22,6 +22,7 @@ download_prebuilt:
 .PHONY: release
 release: renews.arm renews.x86
 	zip release.zip renews.arm renews.x86
+	gh release create --latest release.zip
 
 clean:
 	rm -f renews.x86 renews.arm release.zip
