@@ -1,13 +1,13 @@
 [Unit]
-Description=New York Times
+Description=The New York Times
 
 [Service]
 ExecStart=/home/root/bin/renews.arm \
     -output /usr/share/remarkable/suspended.png \
     -verbose \
     -cooldown COOLDOWN \
-    -url https://cdn.newseum.org/dfp/jpg%%e/lg/NY_NYT.jpg \
-    -strftime \
+    -url https://www.frontpages.com/the-new-york-times \
+    -xpath '//img[@id="giornale-img"]/@src' \
     -mode fill
 Restart=always
 
