@@ -93,7 +93,7 @@ func main() {
 		if subtitle != "" {
 			addCenteredLabel(img.(draw.Image), 150, subtitle_face, subtitle)
 		}
-		imaging.Save(img, *output)
+		imaging.Save(img, *output, imaging.JPEGQuality(100))
 		debug("Image saved to ", *output)
 	}
 
@@ -125,6 +125,7 @@ func main() {
 		// loop forever and wait for network online events
 		for {
 			// wait for network online message from wpa supplicant
+			debug("Waiting for network online...")
 			<- online
 			debug("Network online")
 

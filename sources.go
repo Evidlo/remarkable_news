@@ -126,7 +126,7 @@ func adjust(img image.Image, mode string, scale float64) image.Image {
 		// scale image to remarkable width
 		// imaging resize is slow for some reason, use other library
 		// img = imaging.Resize(img, re_width, 0, imaging.Linear)
-		img = resize.Resize(uint(re_width), 0, img, resize.Bilinear)
+		img = resize.Resize(uint(re_width), 0, img, resize.Bicubic)
 		// cut off parts of image that overflow
 		img = imaging.Crop(img, image.Rect(0, 0, re_width, re_height))
 
@@ -136,7 +136,7 @@ func adjust(img image.Image, mode string, scale float64) image.Image {
 	}
 	if scale != 1 {
 		img_width := float64(img.Bounds().Max.X)
-		img = resize.Resize(uint(scale * img_width), 0, img, resize.Bilinear)
+		img = resize.Resize(uint(scale * img_width), 0, img, resize.Bicubic)
 	}
 
 	// put image in center of screen
