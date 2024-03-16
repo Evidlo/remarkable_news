@@ -1,6 +1,6 @@
-module github.com/evidlo/remarkable_news
+module github.com/evidlo/remarkable_news/v0.0.1
 
-go 1.19
+go 1.22
 
 require (
 	github.com/antchfx/htmlquery v1.3.0

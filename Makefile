@@ -1,8 +1,11 @@
 .ONESHELL:
-# .SILENT:
+.SHELLFLAGS = -ec
+.SILENT:
 
 host=10.11.99.1
 cooldown=3600
+
+version := $(shell go list | cut -d / -f 4)
 
 renews.arm:
 	go get ./...
@@ -22,7 +25,13 @@ download_prebuilt:
 .PHONY: release
 release: renews.arm renews.x86
 	zip release.zip renews.arm renews.x86
-	gh release create --latest release.zip
+	gh release create --latest --verify-tag $(version) release.zip
+
+# tag and push tag
+.PHONY: tag
+tag:
+	git tag $(version)
+	git push --tags
 
 clean:
 	rm -f renews.x86 renews.arm release.zip
