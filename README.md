@@ -5,7 +5,10 @@ reMarkable service to automatically download daily newspaper/comic as your suspe
 ![demo](pic.png)
 
 
-## Install
+## Install (Linux/OSX)
+
+Connect the reMarkable via USB and make sure it has internet access.
+Login to the reMarkable with [SSH](https://remarkable.guide/guide/access/ssh.html) and execute
 
     wget -O - http://evidlo.github.io/remarkable_news/install.sh | sh /dev/stdin nyt
 
