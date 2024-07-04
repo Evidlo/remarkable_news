@@ -6,7 +6,7 @@ I'm looking for help adding more comics/news sources.  Currently remarkable_news
 
 The easiest news/comics sources to add are those that have a static link to the latest image.  However, this is often not the case, so remarkable_news can handle these situations in two ways:
 
-- date dependent URLs - See [this file](/services/nyt.service) for an example ([format string docs](https://github.com/lestrrat-go/strftime)).
+- date dependent URLs - See [this file](/services/dilbert.service) for an example ([format string docs](https://github.com/lestrrat-go/strftime)).
 - <img> tag parsing from html (via [xpath expressions](https://www.webperformance.com/load-testing-tools/blog/articles/real-browser-manual/building-a-testcase/how-locate-element-the-page/xpath-locator-examples/)) - See [this file](/services/xkcd.service) for an example.
 
 #### Testing on host machine
