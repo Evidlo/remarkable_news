@@ -13,7 +13,7 @@ renews.arm:
 
 renews.arm64:
 	go get ./...
-	env GOOS=linux GOARCH=arm64 go build -o renews.arm64
+	env GOOS=linux GOARCH=arm64 go build -tags "rmpp" -o renews.arm64
 
 renews.x86:
 	go get ./...
