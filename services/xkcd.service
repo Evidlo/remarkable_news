@@ -6,7 +6,7 @@ ExecStart=/home/root/bin/renews.arm \
     -output /usr/share/remarkable/suspended.png \
     -verbose \
     -cooldown COOLDOWN \
-    -url https://xkcd.com \
+    -url https://c.xkcd.com/random/comic/ \
     -xpath '//div[@id="comic"]/img/@src' \
     -xpath-title '//div[@id="comic"]/img/@alt' \
     -xpath-subtitle '//div[@id="comic"]/img/@title' \
