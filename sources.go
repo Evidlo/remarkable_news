@@ -119,8 +119,8 @@ func adjust(img image.Image, mode string, scale float64) image.Image {
 
 	debug("Adjusting image")
 
-	re_width := 1404
-	re_height := 1872
+	re_width := 1620
+	re_height := 2160
 
 	if mode == "fill" {
 		// scale image to remarkable width
