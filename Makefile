@@ -11,6 +11,10 @@ renews.arm:
 	go get ./...
 	env GOOS=linux GOARCH=arm GOARM=7 go build -o renews.arm
 
+renews.arm64:
+	go get ./...
+	env GOOS=linux GOARCH=arm64 go build -tags "rmpp" -o renews.arm64
+
 renews.x86:
 	go get ./...
 	go build -o renews.x86
@@ -23,8 +27,8 @@ download_prebuilt:
 
 # build release
 .PHONY: release
-release: renews.arm renews.x86
-	zip release.zip renews.arm renews.x86
+release: renews.arm renews.x86 renews.arm64
+	zip release.zip renews.arm renews.x86 renews.arm64
 	gh release create --latest --verify-tag $(version) release.zip
 
 # tag and push tag
@@ -34,7 +38,7 @@ tag:
 	git push --tags
 
 clean:
-	rm -f renews.x86 renews.arm release.zip
+	rm -f renews.x86 renews.arm renews.arm64 release.zip
 
 # define install
 # 	# make sure ssh agent is running
