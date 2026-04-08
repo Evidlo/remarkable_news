@@ -22,33 +22,52 @@ This outputs to `test.png`.
 
 #### Usage
 
-    [evan@blackbox remarkable_news] ./renews.x86 -h
-    Usage of ./renews.x86:
-      -cooldown int
-            minimum seconds to wait before attempting download again (default 3600)
-      -mode string
-            image scaling mode (fill, center) (default "fill")
-      -output string
-            output image path
-      -scale float
-            scale image prior to centering (default 1)
-      -source string
-            use builtin source and scaling options
-      -strftime
-            enable strftime formatting in URL
-      -test
-            disable wait-online and cooldown
-      -url string
-            input URL
-      -verbose
-            enable debug output
-      -xpath string
-            xpath to <img> tag in url
+```
+Usage of ./renews.x86:
+  -cooldown int
+    minimum seconds to wait before attempting download again (default 3600)
+  -header value
+    custom headers in 'Key: Value' format (can be used multiple times)
+  -mode string
+    image scaling mode (fill, center) (default "fill")
+  -output string
+    output image path
+  -scale float
+    scale image prior to centering (default 1)
+  -source string
+    use builtin source and scaling options
+  -strftime
+    enable strftime formatting in URL
+  -subtitle string
+    subtitle to use instead of xpath-subtitle
+  -subtitle-font string
+    path to TTF subtitle font or built-in name 'NotoSans-Bold', 'NotoSans-Regular' (default) or 'xkcd'
+  -subtitle-font-size float
+    subtitle font size (default 30)
+  -test
+    disable wait-online and cooldown
+  -title string
+    title to use instead of xpath-title
+  -title-font string
+    path to TTF title font or built-in name 'NotoSans-Bold' (default), 'NotoSans-Regular' or 'xkcd'
+  -title-font-size float
+    title font size (default 50)
+  -url string
+    input URL
+  -verbose
+    enable debug output
+  -xpath string
+    xpath to <img> tag in url
+  -xpath-subtitle string
+    xpath to subtitle in url
+  -xpath-title string
+    xpath to title in url
+```
 
 #### New features
 
 Also, there are some additional features I would like to get added
 
-- more options for scaling, margins
-- parse image titles from html (also via xpaths)
-- parse image description from html (via xpaths), would be great for Wikipedia picture of the day to have a caption
+- [x] more options for scaling, margins
+- [x] parse image titles from html (also via xpaths)
+- [x] parse image description from html (via xpaths), would be great for Wikipedia picture of the day to have a caption
