@@ -15,7 +15,8 @@ The easiest news/comics sources to add are those that have a static link to the 
 
 Here is an example command which I used for testing while creating the Calvin and Hobbes source:
 
-    ./renews.x86 -output test.png -verbose -url https://www.gocomics.com/random/calvinandhobbes -xpath '//picture[@class="item-comic-image"]/img/@src' -mode fill -scale 0.9 -test
+    ./renews.x86 -output test.png -verbose -url "https://www.gocomics.com/calvinandhobbes/%Y/%m/%d" -strftime -xpath "//img[contains(@class, 'comic') and contains(@class, 'image')]/@src" -mode fill -scale 0.9 -test
+
     
 This outputs to `test.png`.
 

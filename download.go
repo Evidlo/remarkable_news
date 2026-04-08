@@ -13,6 +13,7 @@ import (
 )
 
 var Err404 = errors.New("Err404")
+var Headers = make(map[string]string)
 
 func to_absurl(base, rel string) (string, error) {
 	base_url, err := url.Parse(base)
@@ -33,7 +34,18 @@ func to_absurl(base, rel string) (string, error) {
 
 func get_url(url string) (*http.Response, error){
 	// if http failure, wait for next reconnect
-	response, err := http.Get(url)
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		debug("Failed to create request")
+		return nil, err
+	}
+
+	for key, value := range Headers {
+		req.Header.Set(key, value)
+	}
+
+	response, err := client.Do(req)
 	if err != nil {
 		debug("Failed to fetch url")
 		return response, err
@@ -53,13 +65,19 @@ func get_url(url string) (*http.Response, error){
 
 
 func xpath_html(url, xpath string) (string, error) {
-	doc, err := htmlquery.LoadURL(url)
+	resp, err := get_url(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	doc, err := htmlquery.Parse(resp.Body)
 	if err != nil {
 		debug("Failed to parse HTML")
 		return "", err
 	}
 
-	list, err := htmlquery.QueryAll(doc, "//meta/text()")
+	list, err := htmlquery.QueryAll(doc, xpath)
 	check(err, "Invalid XPath")
 
 	if len(list) == 0 {
@@ -75,8 +93,14 @@ func get_xpath(url, xpath, data_format string) (string, error) {
 	// load the given URL and query the document with the given XPath expression
 	// returns string result
 
+	resp, err := get_url(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
 	if data_format == "json" {
-		doc, err := jsonquery.LoadURL(url)
+		doc, err := jsonquery.Parse(resp.Body)
 		if err != nil {
 			debug("Failed to parse JSON")
 			return "", err
@@ -93,7 +117,7 @@ func get_xpath(url, xpath, data_format string) (string, error) {
 
 		return list[0].InnerText(), nil
 	} else if data_format == "html" {
-		doc, err := htmlquery.LoadURL(url)
+		doc, err := htmlquery.Parse(resp.Body)
 		if err != nil {
 			debug("Failed to parse HTML")
 			return "", err

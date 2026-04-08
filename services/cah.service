@@ -5,11 +5,15 @@ Description=Calvin and Hobbes
 ExecStart=/home/root/bin/renews.arm \
     -output /usr/share/remarkable/suspended.png \
     -verbose \
-    -cooldown COOLDOWN \
-    -url https://www.gocomics.com/random/calvinandhobbes \
-    -xpath '//picture[@class="item-comic-image"]/img/@src' \
+    -cooldown 86400 \
+    -url https://www.gocomics.com/calvinandhobbes/%%Y/%%m/%%d \
+    -header "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0" \
+    -header "Accept-Language: en" \
+    -header "Accept: */*" \
+    -xpath "//img[contains(@class, 'comic') and contains(@class, 'image')]/@src" \
+    -strftime \
     -mode fill \
-    -scale 0.9
+    -scale 0.9 
 Restart=always
 
 [Install]
