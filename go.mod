@@ -1,4 +1,4 @@
-module github.com/evidlo/remarkable_news/v1.0.1
+module github.com/evidlo/remarkable_news/v1.0.2
 
 go 1.22
 
